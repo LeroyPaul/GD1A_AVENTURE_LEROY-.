@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" /><title>The Legend of Canard : a Canard to the Past</title>
+    <script src="//cdn.jsdelivr.net/npm/phaser@3.51.0/dist/phaser.js">
+    </script>
+
+    <style type="text/css"> body 
+    
+        { margin: 0; 
+        }
+        
+    
+    </style>
+</head>
+<body>
+    <script type="text/javascript">
+
+
+class scene1 extends Phaser.Scene{
+    constructor(){
+        super("scene 1");
+    }
+preload(){
+
+    this.load.spritesheet('perso','assets/anim canard marche droite.png',
+    { frameWidth: 32, frameHeight: 32 });
+
+
+}
+
+
+create(){
+
+    this.player = this.physics.add.sprite(100,100, 'perso') 
+
+
+}
+
+update(){
+
+
+
+}
+
+};
+
+            
+
+
+var config = {
+        type: Phaser.AUTO,
+        width: 1920, height: 1080,
+        physics: {
+        default: 'arcade',
+        arcade: {
+        debug: false
+        }},
+        scene: [scene1]
+        };
+        new Phaser.Game(config);
+
+
+</script>
+</body>
+</html>
