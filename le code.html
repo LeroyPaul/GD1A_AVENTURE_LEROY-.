@@ -23,8 +23,8 @@ class scene1 extends Phaser.Scene{
     }
 preload(){
 
-    this.load.spritesheet('perso','assets/anim canard marche droite.png',
-    { frameWidth: 32, frameHeight: 32 });
+    this.load.spritesheet('perso','assets/anim canard marche droite.png',{ frameWidth: 32, frameHeight: 32 });
+    this.load.image('image',"assets/freddo l'escargot.");
 
 
 }
@@ -32,12 +32,82 @@ preload(){
 
 create(){
 
-    this.player = this.physics.add.sprite(100,100, 'perso') 
+    this.cameras.main.zoom = 2;
+    this.cameras.main.startFollow(player);
+
+    this.player = this.physics.add.sprite(100,100, 'perso');
+    
+    this.anims.create({
+                key: 'animMarcheDroite',
+                frames: this.anims.generateFrameNumbers('perso', {start:0,end:5}),
+                frameRate: 8,
+                repeat: -1
+            });
+
+
+            this.cursors = this.input.keyboard.createCursorKeys();
+            this.keys = this.input.keyboard.addKeys({
+                q:  Phaser.Input.Keyboard.KeyCodes.Q,
+                d:  Phaser.Input.Keyboard.KeyCodes.D,
+                z:  Phaser.Input.Keyboard.KeyCodes.Z,
+            });
 
 
 }
 
 update(){
+
+    //Déplacement vertical
+    if (this.cursors.up.isDown){
+            if (this.cursors.down.isDown) {
+                this.player.setVelocityY(0);
+            }
+            else {
+                if (this.player.body.velocity.x != 0) {
+                    this.player.setVelocityY(-200);
+                } else {
+                    this.player.setVelocityY(-300);
+                }
+            }
+        }
+        else if (this.cursors.down.isDown){
+            if (this.player.body.velocity.x != 0) {
+                    this.player.setVelocityY(200);
+                } else {
+                    this.player.setVelocityY(300);
+                }
+        }
+        else {this.player.setVelocityY(0);}
+        //Déplacement horizontal
+        if (this.cursors.left.isDown){
+            if (this.cursors.right.isDown) {
+                this.player.setVelocityX(0);
+            }
+            else {
+                if (this.player.body.velocity.y != 0) {
+                    this.player.setVelocityX(-200);
+                } else {
+                    this.player.setVelocityX(-300);
+                }
+            }
+        }
+        else if (this.cursors.right.isDown){
+            if (this.player.body.velocity.y != 0) {
+                    this.player.setVelocityX(200);
+                } else {
+                    this.player.setVelocityX(300);
+                }
+        }
+        else {this.player.setVelocityX(0);}
+
+
+
+        // ANIMATION (pas du tout pompé sur zelda)
+
+        if (this.player.body.velocity.x > 0){
+            this.player.anims.play('animMarcheDroite', true);
+        }
+    
 
 
 
@@ -50,7 +120,7 @@ update(){
 
 var config = {
         type: Phaser.AUTO,
-        width: 1920, height: 1080,
+        width: 960, height: 540,
         physics: {
         default: 'arcade',
         arcade: {
