@@ -23,7 +23,11 @@ class scene1 extends Phaser.Scene{
     }
 preload(){
 
-    this.load.spritesheet('perso','assets/anim canard marche droite.png',{ frameWidth: 32, frameHeight: 32 });
+    this.load.spritesheet('marcheDroite','assets/anim canard marche droite.png',{ frameWidth: 32, frameHeight: 32 });
+    this.load.spritesheet('marcheGauche','assets/anim canard marche gauche.png',{ frameWidth: 32, frameHeight: 32 });
+    this.load.spritesheet('marcheArriere','assets/anim canard marche arrière.png',{ frameWidth: 32, frameHeight: 35 });
+    this.load.spritesheet('marcheAvant','assets/anim canard marche avant.png',{ frameWidth: 32, frameHeight: 35 });
+    this.load.spritesheet('bougePasAvant','assets/anim canard bouge pas avant.png',{ frameWidth: 32, frameHeight: 32 });
     this.load.image('image',"assets/freddo l'escargot.");
 
 
@@ -32,14 +36,42 @@ preload(){
 
 create(){
 
-    this.cameras.main.zoom = 2;
-    this.cameras.main.startFollow(player);
+    //this.cameras.main.zoom = 2;
+    //this.cameras.main.startFollow(player);
 
-    this.player = this.physics.add.sprite(100,100, 'perso');
+    
     
     this.anims.create({
                 key: 'animMarcheDroite',
-                frames: this.anims.generateFrameNumbers('perso', {start:0,end:5}),
+                frames: this.anims.generateFrameNumbers('marcheDroite', {start:0,end:5}),
+                frameRate: 8,
+                repeat: -1
+            });
+
+    this.anims.create({
+                key: 'animMarcheGauche',
+                frames: this.anims.generateFrameNumbers('marcheGauche', {start:0,end:5}),
+                frameRate: 8,
+                repeat: -1
+            });
+
+    this.anims.create({
+                key: 'animMarcheArriere',
+                frames: this.anims.generateFrameNumbers('marcheArriere', {start:0,end:5}),
+                frameRate: 8,
+                repeat: -1
+            });
+
+    this.anims.create({
+                key: 'animMarcheAvant',
+                frames: this.anims.generateFrameNumbers('marcheAvant', {start:0,end:5}),
+                frameRate: 8,
+                repeat: -1
+            });
+
+    this.anims.create({
+                key: 'animBougePasAvant',
+                frames: this.anims.generateFrameNumbers('bougePasAvant', {start:0,end:7}),
                 frameRate: 8,
                 repeat: -1
             });
@@ -50,6 +82,7 @@ create(){
                 q:  Phaser.Input.Keyboard.KeyCodes.Q,
                 d:  Phaser.Input.Keyboard.KeyCodes.D,
                 z:  Phaser.Input.Keyboard.KeyCodes.Z,
+                s:  Phaser.Input.Keyboard.KeyCodes.S,
             });
 
 
@@ -98,21 +131,38 @@ update(){
                     this.player.setVelocityX(300);
                 }
         }
-        else {this.player.setVelocityX(0);}
+        else {
+            this.player.setVelocityX(0);}
+            
 
 
 
-        // ANIMATION (pas du tout pompé sur zelda)
+        // ANIMATION (pas du tout pompe sur zelda)
+
+
 
         if (this.player.body.velocity.x > 0){
             this.player.anims.play('animMarcheDroite', true);
         }
+
+        if (this.player.body.velocity.y < 0){
+            this.player.anims.play('animMarcheArriere', true);
+        }
+
+        if (this.player.body.velocity.x < 0){
+            this.player.anims.play('animMarcheGauche', true);
+        }
+
+        if (this.player.body.velocity.y > 0){
+            this.player.anims.play('animMarcheAvant', true);
+        }
+        
+        if (this.player.body.velocity.x==0){
+            if (this.player.body.velocity.y==0){
+                this.player.anims.play('animBougePasAvant', true);
+        }}
     
-
-
-
 }
-
 };
 
             
