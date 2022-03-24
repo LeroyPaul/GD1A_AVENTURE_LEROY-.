@@ -26,10 +26,10 @@ preload(){
 
     this.load.spritesheet('marcheDroite','assets/anim canard marche droite.png',{ frameWidth: 32, frameHeight: 32 });
     this.load.spritesheet('marcheGauche','assets/anim canard marche gauche.png',{ frameWidth: 32, frameHeight: 32 });
-    this.load.spritesheet('marcheArriere','assets/anim canard marche arrière.png',{ frameWidth: 32, frameHeight: 35 });
+    this.load.spritesheet('marcheArriere','assets/anim canard marche arriere.png',{ frameWidth: 32, frameHeight: 35 });
     this.load.spritesheet('marcheAvant','assets/anim canard marche avant.png',{ frameWidth: 32, frameHeight: 35 });
     this.load.spritesheet('bougePasAvant','assets/anim canard bouge pas avant.png',{ frameWidth: 32, frameHeight: 32 });
-    //this.load.image('image',"assets/freddo l'escargot.");
+    this.load.image('image',"assets/freddo l'escargot.");
 
 }
 
@@ -37,8 +37,10 @@ preload(){
 create(){
 
 
+    this.add.image(100, 150, 'image');
+
     this.player = this.physics.add.sprite(100,100,"bougePasAvant");
-    this.cameras.main.zoom = 2;
+    //this.cameras.main.zoom = 2;
     this.cameras.main.startFollow(this.player);
 
     
