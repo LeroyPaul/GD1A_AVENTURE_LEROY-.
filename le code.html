@@ -21,6 +21,7 @@ class scene1 extends Phaser.Scene{
     constructor(){
         super("scene 1");
     }
+
 preload(){
 
     this.load.spritesheet('marcheDroite','assets/anim canard marche droite.png',{ frameWidth: 32, frameHeight: 32 });
@@ -28,16 +29,17 @@ preload(){
     this.load.spritesheet('marcheArriere','assets/anim canard marche arrière.png',{ frameWidth: 32, frameHeight: 35 });
     this.load.spritesheet('marcheAvant','assets/anim canard marche avant.png',{ frameWidth: 32, frameHeight: 35 });
     this.load.spritesheet('bougePasAvant','assets/anim canard bouge pas avant.png',{ frameWidth: 32, frameHeight: 32 });
-    this.load.image('image',"assets/freddo l'escargot.");
-
+    //this.load.image('image',"assets/freddo l'escargot.");
 
 }
 
 
 create(){
 
-    //this.cameras.main.zoom = 2;
-    //this.cameras.main.startFollow(player);
+
+    this.player = this.physics.add.sprite(100,100,"bougePasAvant");
+    this.cameras.main.zoom = 2;
+    this.cameras.main.startFollow(this.player);
 
     
     
@@ -75,6 +77,7 @@ create(){
                 frameRate: 8,
                 repeat: -1
             });
+            
 
 
             this.cursors = this.input.keyboard.createCursorKeys();
@@ -161,11 +164,9 @@ update(){
             if (this.player.body.velocity.y==0){
                 this.player.anims.play('animBougePasAvant', true);
         }}
-    
+        
 }
 };
-
-            
 
 
 var config = {
