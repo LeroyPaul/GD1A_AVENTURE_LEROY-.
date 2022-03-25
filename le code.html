@@ -24,6 +24,10 @@ class scene1 extends Phaser.Scene{
 
 preload(){
 
+    this.load.image("phaser_background", "assets/essai decor.png");
+
+    this.load.tilemapTiledJSON("carte", "map.json");  
+
     this.load.spritesheet('marcheDroite','assets/anim canard marche droite.png',{ frameWidth: 32, frameHeight: 32 });
     this.load.spritesheet('marcheGauche','assets/anim canard marche gauche.png',{ frameWidth: 32, frameHeight: 32 });
     this.load.spritesheet('marcheArriere','assets/anim canard marche arriere.png',{ frameWidth: 32, frameHeight: 35 });
@@ -37,10 +41,36 @@ preload(){
 create(){
 
 
-    this.add.image(100, 150, 'image');
+    const carteDuNiveau = this.add.tilemap("carte");
+
+
+// importer TileSet 
+    const tileset = carteDuNiveau.addTilesetImage(
+        "essai decor",
+        "phaser_background",
+    );
+// importez les layers 1 apr 1 dans l'ordre d'apparition
+    const layer1 = carteDuNiveau.createStaticLayer(
+                    "mur",
+                    tileset,
+                    );  
+
+
+
+
+this.physics.world.setBounds(0, 0, 3200, 3200);
+
+
+
+
+    this.add.image(10, 10, 'image');
 
     this.player = this.physics.add.sprite(100,100,"bougePasAvant");
-    //this.cameras.main.zoom = 2;
+    this.player.setSize(15, 13);
+    this.player.setOffset(9, 20);
+
+
+    this.cameras.main.zoom = 2;
     this.cameras.main.startFollow(this.player);
 
     
@@ -177,8 +207,10 @@ var config = {
         physics: {
         default: 'arcade',
         arcade: {
-        debug: false
+        debug: true
         }},
+        pixelArt: true,
+        roundPixel: true,
         scene: [scene1]
         };
         new Phaser.Game(config);
