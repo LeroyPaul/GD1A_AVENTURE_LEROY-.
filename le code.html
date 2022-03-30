@@ -33,12 +33,25 @@ preload(){
     this.load.spritesheet('marcheArriere','assets/anim canard marche arriere.png',{ frameWidth: 32, frameHeight: 35 });
     this.load.spritesheet('marcheAvant','assets/anim canard marche avant.png',{ frameWidth: 32, frameHeight: 35 });
     this.load.spritesheet('bougePasAvant','assets/anim canard bouge pas avant.png',{ frameWidth: 32, frameHeight: 32 });
-    this.load.image('image',"assets/freddo l'escargot.");
+
+    this.load.spritesheet('monstreArrière','assets/anim canard bouge pas avant.png',{ frameWidth: 32, frameHeight: 32 });
+
+
 
 }
 
 
 create(){
+
+//Variable
+
+this.attaque = false;
+this.compteurAttaqueTemps = 40;
+this.direction = "arriere"
+
+
+
+
 
 
     const carteDuNiveau = this.add.tilemap("carte");
@@ -66,7 +79,6 @@ this.physics.world.setBounds(0, 0, 3200, 3200);
 
 
 
-    this.add.image(10, 10, 'image');
 
     this.player = this.physics.add.sprite(100,100,"bougePasAvant");
     layer1.setCollisionByProperty({ EstSolide: true });
@@ -77,6 +89,7 @@ this.physics.world.setBounds(0, 0, 3200, 3200);
     this.player.setSize(15, 13);
     this.player.setOffset(9, 20);
 
+    this.voiture = this.physics.add.sprite(200,200,"bougePasAvant");
 
     this.cameras.main.zoom = 2;
     this.cameras.main.startFollow(this.player);
@@ -129,13 +142,13 @@ this.physics.world.setBounds(0, 0, 3200, 3200);
                 m:  Phaser.Input.Keyboard.KeyCodes.M,
             });
 
-
 }
 
 update(){
 
     //Déplacement vertical
     if (this.cursors.up.isDown || this.keys.z.isDown){
+        this.direction = "haut"
             if (this.cursors.down.isDown || this.keys.s.isDown) {
                 this.player.setVelocityY(0);
             }
@@ -148,6 +161,7 @@ update(){
             }
         }
         else if (this.cursors.down.isDown || this.keys.s.isDown){
+            this.direction = "bas"
             if (this.player.body.velocity.x != 0) {
                     this.player.setVelocityY(150);
                 } else {
@@ -157,6 +171,7 @@ update(){
         else {this.player.setVelocityY(0);}
         //Déplacement horizontal
         if (this.cursors.left.isDown || this.keys.q.isDown){
+            this.direction = "gauche"
             if (this.cursors.right.isDown || this.keys.d.isDown) {
                 this.player.setVelocityX(0);
             }
@@ -169,6 +184,7 @@ update(){
             }
         }
         else if (this.cursors.right.isDown || this.keys.d.isDown){
+            this.direction = "droite"
             if (this.player.body.velocity.y != 0) {
                     this.player.setVelocityX(150);
                 } else {
@@ -201,21 +217,51 @@ update(){
             this.player.anims.play('animMarcheAvant', true);
         }
         
-      
-        
-
-
+        if(this.player.body.velocity.x==0){
+            if (this.player.body.velocity.y==0){
+                if (this.attaque == false){
+                        this.player.anims.play('animBougePasAvant', true);
+                        }
+                    }
+                }
 
 
         // ACTIONS PARTICULIERES
 
-        if(this.keys.m.isDown){
-            this.player.anims.play('animMarcheGauche', true);}
-            else if(this.player.body.velocity.x==0){
-                    if (this.player.body.velocity.y==0){
-                        this.player.anims.play('animBougePasAvant', true);
-                    }      
+       if(this.keys.m.isDown){
+           this.attaque = true
+       }
+
+       if (this.attaque == true){
+        
+            if (this.direction == "droite"){
+                this.player.anims.play('animMarcheDroite', true);
+                this.player.setSize(25, 30);
+                this.player.setOffset(20, 0);}
+            if (this.direction == "gauche"){
+                this.player.anims.play('animMarcheGauche', true);
+                this.player.setSize(25, 30);
+                this.player.setOffset(-15, 0);}
+
+            if (this.direction == "haut"){
+                this.player.anims.play('animMarcheArrière', true);
+                this.player.setSize(25, 25);
+                this.player.setOffset(4, -15);}
+            
+
+                    this.compteurAttaqueTemps -=1 ;
+                    if(this.compteurAttaqueTemps == 0){
+                        this.compteurAttaqueTemps = 40;
+                        this.attaque = false ;
+                        this.player.setSize(15, 13);
+                        this.player.setOffset(9, 20);
+                
             }
+
+
+
+       }
+
         
 }
 };
