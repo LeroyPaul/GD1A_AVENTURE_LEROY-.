@@ -47,7 +47,7 @@ create(){
 
 this.attaque = false;
 this.compteurAttaqueTemps = 40;
-this.direction = "arriere"
+this.direction = "bas"
 
 
 
@@ -89,7 +89,7 @@ this.physics.world.setBounds(0, 0, 3200, 3200);
     this.player.setSize(15, 13);
     this.player.setOffset(9, 20);
 
-    this.voiture = this.physics.add.sprite(200,200,"bougePasAvant");
+    this.ennemi = this.physics.add.sprite(200,200,"bougePasAvant");
 
     this.cameras.main.zoom = 2;
     this.cameras.main.startFollow(this.player);
@@ -142,6 +142,8 @@ this.physics.world.setBounds(0, 0, 3200, 3200);
                 m:  Phaser.Input.Keyboard.KeyCodes.M,
             });
 
+
+        this.physics.add.overlap( this.player, this.ennemi, this.attaqueEnnemi, null,this);
 }
 
 update(){
@@ -151,6 +153,7 @@ update(){
         this.direction = "haut"
             if (this.cursors.down.isDown || this.keys.s.isDown) {
                 this.player.setVelocityY(0);
+                this.direction = "haut"
             }
             else {
                 if (this.player.body.velocity.x != 0) {
@@ -173,6 +176,7 @@ update(){
         if (this.cursors.left.isDown || this.keys.q.isDown){
             this.direction = "gauche"
             if (this.cursors.right.isDown || this.keys.d.isDown) {
+                this.direction = "bas"
                 this.player.setVelocityX(0);
             }
             else {
@@ -192,7 +196,8 @@ update(){
                 }
         }
         else {
-            this.player.setVelocityX(0);}
+            this.player.setVelocityX(0);
+            }
             
 
 
@@ -244,9 +249,14 @@ update(){
                 this.player.setOffset(-15, 0);}
 
             if (this.direction == "haut"){
-                this.player.anims.play('animMarcheArrière', true);
+                this.player.anims.play('animMarcheArriere', true);
                 this.player.setSize(25, 25);
                 this.player.setOffset(4, -15);}
+
+            if (this.direction == "bas"){
+                this.player.anims.play('animMarcheAvant', true);
+                this.player.setSize(25, 25);
+                this.player.setOffset(4, 25);}
             
 
                     this.compteurAttaqueTemps -=1 ;
@@ -261,10 +271,25 @@ update(){
 
 
        }
-
+     
         
 }
+
+attaqueEnnemi (player,ennemi){
+        if (this.attaque==true){
+            ennemi.destroy();
+        }
+        if (this.attaque==false){
+            player.setTint(0xffffff);
+        }
+    }
+
+
+
+
 };
+
+
 
 
 var config = {
