@@ -34,9 +34,11 @@ preload(){
     this.load.spritesheet('marcheAvant','assets/anim canard marche avant.png',{ frameWidth: 32, frameHeight: 35 });
     this.load.spritesheet('bougePasAvant','assets/anim canard bouge pas avant.png',{ frameWidth: 32, frameHeight: 32 });
 
-    this.load.spritesheet('monstreArrière','assets/anim canard bouge pas avant.png',{ frameWidth: 32, frameHeight: 32 });
-
-
+    this.load.spritesheet('monstreArriere','assets/anim monstre marche avant.png',{ frameWidth: 32, frameHeight: 37 });
+    this.load.image("epee", "assets/epee.png");
+    this.load.image("vie3", "assets/vie3.png");
+    this.load.image("vie2", "assets/vie2.png");
+    this.load.image("vie1", "assets/vie1.png");
 
 }
 
@@ -45,15 +47,17 @@ create(){
 
 //Variable
 
+this.vie = 3;
 this.attaque = false;
 this.compteurAttaqueTemps = 40;
-this.direction = "bas"
+this.direction = "bas";
+this.possedeEpee = false;
 
 
 
 
 
-
+// importer Tiled
     const carteDuNiveau = this.add.tilemap("carte");
 
 
@@ -75,6 +79,7 @@ this.direction = "bas"
 
 
 this.physics.world.setBounds(0, 0, 3200, 3200);
+//this.cameras.main.setBounds(0, 0, 14400, 8000);
 
 
 
@@ -89,8 +94,15 @@ this.physics.world.setBounds(0, 0, 3200, 3200);
     this.player.setSize(15, 13);
     this.player.setOffset(9, 20);
 
-    this.ennemi = this.physics.add.sprite(200,200,"bougePasAvant");
+    this.ennemi = this.physics.add.sprite(200,200,"monstreArriere",true);
+    this.ennemi.setInteractive()
 
+    this.epee = this.physics.add.sprite(300,300,"epee");
+    
+    this.vieEcran = this.add.image(300,150,"vie3")
+    this.vieEcran.setInteractive()
+    this.vieEcran.setScrollFactor(0)
+    
     this.cameras.main.zoom = 2;
     this.cameras.main.startFollow(this.player);
 
@@ -144,6 +156,12 @@ this.physics.world.setBounds(0, 0, 3200, 3200);
 
 
         this.physics.add.overlap( this.player, this.ennemi, this.attaqueEnnemi, null,this);
+        this.physics.add.overlap( this.player, this.ennemi, this.perdPV, null,this);
+        this.physics.add.overlap( this.player, this.epee, this.obtenirEpee, null,this);
+
+        
+
+
 }
 
 update(){
@@ -234,8 +252,10 @@ update(){
         // ACTIONS PARTICULIERES
 
        if(this.keys.m.isDown){
+           if(this.possedeEpee == true){
            this.attaque = true
-       }
+        }
+        }
 
        if (this.attaque == true){
         
@@ -268,21 +288,34 @@ update(){
             }
        }
 
+       if (this.vie == 2){
+            this.vieEcran.setTexture("vie2")}
+        if (this.vie == 1){
+            this.vieEcran.setTexture("vie1")}
+
+
+                    
 }
 
 attaqueEnnemi (player,ennemi){
         if (this.attaque==true){
             ennemi.destroy();
-        }
-        if (this.attaque==false){
-            player.setTint(0xffffff);
+            this.add.image(ennemi.x,ennemi.y,"vie3")
         }
     }
 
+perdPV (player,ennemi){
+    this.vieEcran.setTexture("vie2");
+    }
 
-
+    
+obtenirEpee (player,epee){
+    this.possedeEpee = true
+    epee.destroy();
+}
 
 };
+
 
 
 
