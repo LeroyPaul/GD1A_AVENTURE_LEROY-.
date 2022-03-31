@@ -89,8 +89,10 @@ this.texte = this.add.text(260,170,this.nombreArgent)
 this.texte.setScrollFactor(0)
 
     this.player = this.physics.add.sprite(100,100,"bougePasAvant");
-    layer1.setCollisionByProperty({ EstSolide: true });
+    layer1.setCollisionByProperty({ estSolide: true });
     this.physics.add.collider(this.player, layer1);
+    layer2.setCollisionByProperty({ estSolide: true });
+    this.physics.add.collider(this.player, layer2);
     
     
     
@@ -306,6 +308,7 @@ attaqueEnnemi (player,ennemi){
             ennemi.destroy();
             this.argent = this.physics.add.image(ennemi.x-100,ennemi.y+20,"argent");
             this.nombreArgent += 1;
+            this.texte.setText;
         }
     }
 
