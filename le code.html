@@ -36,6 +36,7 @@ preload(){
 
     this.load.spritesheet('monstreArriere','assets/anim monstre marche avant.png',{ frameWidth: 32, frameHeight: 37 });
     this.load.image("epee", "assets/epee.png");
+    this.load.image("palme", "assets/palme.png");
     this.load.image("vie3", "assets/vie3.png");
     this.load.image("vie2", "assets/vie2.png");
     this.load.image("vie1", "assets/vie1.png");
@@ -51,6 +52,8 @@ create(){
 this.vie = 3;
 this.attaque = false;
 this.compteurAttaqueTemps = 40;
+this.invincible = false;
+this.compteurInvincible = 80;
 this.direction = "bas";
 this.possedeEpee = false;
 this.nombreArgent = 0
@@ -96,7 +99,7 @@ this.texte.setScrollFactor(0)
     this.physics.add.collider(this.player, layer2);
 
     
-    if(this.palme == false){
+    if(this.possedePalme === false){
         layer1.setCollisionByProperty({ eau: true });
         this.physics.add.collider(this.player, layer1);
         layer2.setCollisionByProperty({ eau: true });
@@ -114,7 +117,7 @@ this.texte.setScrollFactor(0)
 
     this.epee = this.physics.add.sprite(300,300,"epee");
 
-    this.palme = this.physics.add.sprite(300,0,"epee");
+    this.palme = this.physics.add.sprite(300,0,"palme");
     
     this.vieEcran = this.add.image(300,150,"vie3");
     this.vieEcran.setInteractive();
@@ -175,7 +178,7 @@ this.texte.setScrollFactor(0)
         this.physics.add.overlap( this.player, this.ennemi, this.attaqueEnnemi, null,this);
         this.physics.add.overlap( this.player, this.ennemi, this.perdPV, null,this);
         this.physics.add.overlap( this.player, this.epee, this.obtenirEpee, null,this);
-        this.physics.add.overlap( this.player, this.argent, this.obtenirArgent, null,this);
+        this.physics.add.collider( this.player, this.argent, this.obtenirArgent, null,this);
         this.physics.add.overlap( this.player, this.palme, this.obtenirPalme, null,this);
 
         
@@ -184,8 +187,9 @@ this.texte.setScrollFactor(0)
 }
 
 update(){
+    
 
-    //Déplacement vertical
+    //Deplacement vertical
     if (this.cursors.up.isDown || this.keys.z.isDown){
         this.direction = "haut"
             if (this.cursors.down.isDown || this.keys.s.isDown) {
@@ -209,7 +213,7 @@ update(){
                 }
         }
         else {this.player.setVelocityY(0);}
-        //Déplacement horizontal
+        //Deplacement horizontal
         if (this.cursors.left.isDown || this.keys.q.isDown){
             this.direction = "gauche"
             if (this.cursors.right.isDown || this.keys.d.isDown) {
@@ -311,19 +315,29 @@ update(){
             this.vieEcran.setTexture("vie2")}
         if (this.vie == 1){
             this.vieEcran.setTexture("vie1")}
+        if (this.vie == 0){
+            this.scene.restart()}
 }
 
 attaqueEnnemi (player,ennemi){
         if (this.attaque==true){
             ennemi.destroy();
-            this.argent = this.physics.add.image(player.x,player.y-60,"argent");
+            this.argent = this.physics.add.image(player.x+(ennemi.x-player.x)*2,player.y+(ennemi.y-player.y)*2,"argent");
             this.nombreArgent += 1;
             this.texte.setText;
         }
     }
 
 perdPV (player,ennemi){
-    this.vie --;
+    if (this.invincible == false){
+        this.vie --}
+    this.invincible = true
+    this.compteurInvincible -=1 ;
+            if(this.compteurInvincible == 0){
+                this.compteurInvincible = 80;
+                this.invincible = false ;
+            }
+    
     }
 
     
@@ -333,13 +347,13 @@ obtenirEpee (player,epee){
 }
 
 obtenirArgent (player,argent){
-    argent.destroy();
+    this.argent.destroy();
     this.nombreArgent += 1;
 }
 
 obtenirPalme (player,palme){
-    this.possedePalme = true;
-    palme.destroys();
+
+    this.palme.destroy();
 }
 
 
