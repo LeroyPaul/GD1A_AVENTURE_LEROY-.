@@ -116,9 +116,9 @@ this.texte.setScrollFactor(0)
 
     this.palme = this.physics.add.sprite(300,0,"epee");
     
-    this.vieEcran = this.add.image(300,150,"vie3")
-    this.vieEcran.setInteractive()
-    this.vieEcran.setScrollFactor(0)
+    this.vieEcran = this.add.image(300,150,"vie3");
+    this.vieEcran.setInteractive();
+    this.vieEcran.setScrollFactor(0);
     
     this.cameras.main.zoom = 2;
     this.cameras.main.startFollow(this.player);
@@ -311,22 +311,19 @@ update(){
             this.vieEcran.setTexture("vie2")}
         if (this.vie == 1){
             this.vieEcran.setTexture("vie1")}
-
-
-            
 }
 
 attaqueEnnemi (player,ennemi){
         if (this.attaque==true){
             ennemi.destroy();
-            this.argent = this.physics.add.image(ennemi.x-100,ennemi.y+20,"argent");
+            this.argent = this.physics.add.image(player.x,player.y-60,"argent");
             this.nombreArgent += 1;
             this.texte.setText;
         }
     }
 
 perdPV (player,ennemi){
-    this.vieEcran.setTexture("vie2");
+    this.vie --;
     }
 
     
@@ -347,6 +344,27 @@ obtenirPalme (player,palme){
 
 
 };
+
+
+
+
+
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//scene2
+
+
+
+
+
+
+
+
+
 
 
 
