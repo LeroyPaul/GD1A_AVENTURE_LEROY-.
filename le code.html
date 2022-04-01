@@ -54,7 +54,7 @@ this.compteurAttaqueTemps = 40;
 this.direction = "bas";
 this.possedeEpee = false;
 this.nombreArgent = 0
-
+this.possedePalme = false
 
 
 
@@ -73,6 +73,7 @@ this.nombreArgent = 0
                     "mur",
                     tileset,
                     );  
+                    this.player = this.physics.add.sprite(100,100,"bougePasAvant");
     const layer2 = carteDuNiveau.createStaticLayer(
                     "sol",
                     tileset,
@@ -88,11 +89,20 @@ this.physics.world.setBounds(0, 0, 3200, 3200);
 this.texte = this.add.text(260,170,this.nombreArgent)
 this.texte.setScrollFactor(0)
 
-    this.player = this.physics.add.sprite(100,100,"bougePasAvant");
+    
     layer1.setCollisionByProperty({ estSolide: true });
     this.physics.add.collider(this.player, layer1);
     layer2.setCollisionByProperty({ estSolide: true });
     this.physics.add.collider(this.player, layer2);
+
+    
+    if(this.palme == false){
+        layer1.setCollisionByProperty({ eau: true });
+        this.physics.add.collider(this.player, layer1);
+        layer2.setCollisionByProperty({ eau: true });
+        this.physics.add.collider(this.player, layer2);
+    }
+
     
     
     
@@ -103,6 +113,8 @@ this.texte.setScrollFactor(0)
     this.ennemi.setInteractive()
 
     this.epee = this.physics.add.sprite(300,300,"epee");
+
+    this.palme = this.physics.add.sprite(300,0,"epee");
     
     this.vieEcran = this.add.image(300,150,"vie3")
     this.vieEcran.setInteractive()
@@ -164,6 +176,7 @@ this.texte.setScrollFactor(0)
         this.physics.add.overlap( this.player, this.ennemi, this.perdPV, null,this);
         this.physics.add.overlap( this.player, this.epee, this.obtenirEpee, null,this);
         this.physics.add.overlap( this.player, this.argent, this.obtenirArgent, null,this);
+        this.physics.add.overlap( this.player, this.palme, this.obtenirPalme, null,this);
 
         
 
@@ -300,7 +313,7 @@ update(){
             this.vieEcran.setTexture("vie1")}
 
 
-                    
+            
 }
 
 attaqueEnnemi (player,ennemi){
@@ -318,14 +331,18 @@ perdPV (player,ennemi){
 
     
 obtenirEpee (player,epee){
-    this.possedeEpee = true
+    this.possedeEpee = true;
     epee.destroy();
 }
 
 obtenirArgent (player,argent){
-    this.argent.destroy();
+    argent.destroy();
     this.nombreArgent += 1;
+}
 
+obtenirPalme (player,palme){
+    this.possedePalme = true;
+    palme.destroys();
 }
 
 
