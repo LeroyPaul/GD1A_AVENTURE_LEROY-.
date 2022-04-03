@@ -34,6 +34,8 @@ preload(){
     this.load.spritesheet('marcheAvant','assets/anim canard marche avant.png',{ frameWidth: 32, frameHeight: 35 });
     this.load.spritesheet('bougePasAvant','assets/anim canard bouge pas avant.png',{ frameWidth: 32, frameHeight: 32 });
 
+    this.load.spritesheet('attaqueDroite','assets/anim canard attaque droite.png',{ frameWidth: 36, frameHeight: 38 });
+
     this.load.spritesheet('monstreArriere','assets/anim monstre marche avant.png',{ frameWidth: 32, frameHeight: 37 });
     this.load.image("epee", "assets/epee.png");
     this.load.image("palme", "assets/palme.png");
@@ -170,6 +172,13 @@ this.texte.setScrollFactor(0)
                 frameRate: 8,
                 repeat: -1
             });
+
+    this.anims.create({
+                key: 'animAttaqueDroite',
+                frames: this.anims.generateFrameNumbers('attaqueDroite', {start:0,end:5}),
+                frameRate: 8,
+                repeat: -1
+            });
             
 
 
@@ -291,7 +300,7 @@ update(){
        if (this.attaque == true){
         
             if (this.direction == "droite"){
-                this.player.anims.play('animMarcheDroite', true);
+                this.player.anims.play('animAttaqueDroite',true);
                 this.player.setSize(25, 30);
                 this.player.setOffset(20, 0);}
             if (this.direction == "gauche"){
@@ -360,7 +369,6 @@ obtenirArgent (player,argent){
 }
 
 obtenirPalme (player,palme){
-
     this.palme.destroy();
     this.possedePalme = true;
     
