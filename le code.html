@@ -81,6 +81,10 @@ this.possedePalme = false
                     "sol",
                     tileset,
                     );  
+//    const coffrelayer =carteDuNiveau.getObjectLayer('coffre');
+//    coffrelayer.objects.forEach(coffreObjet => {
+//       this.coffre.get(coffreObjet.x,coffreObjet.y,'argent')
+//    })
 
 
 
@@ -98,14 +102,16 @@ this.texte.setScrollFactor(0)
     layer2.setCollisionByProperty({ estSolide: true });
     this.physics.add.collider(this.player, layer2);
 
-    
-    if(this.possedePalme === false){
+
+
         layer1.setCollisionByProperty({ eau: true });
         this.physics.add.collider(this.player, layer1);
         layer2.setCollisionByProperty({ eau: true });
         this.physics.add.collider(this.player, layer2);
-    }
-
+    
+    
+    
+    
     
     
     
@@ -114,6 +120,8 @@ this.texte.setScrollFactor(0)
 
     this.ennemi = this.physics.add.sprite(200,200,"monstreArriere",true);
     this.ennemi.setInteractive()
+
+    //this.porte = this.pysics.add.sprite(330,200,"epee");
 
     this.epee = this.physics.add.sprite(300,300,"epee");
 
@@ -354,6 +362,10 @@ obtenirArgent (player,argent){
 obtenirPalme (player,palme){
 
     this.palme.destroy();
+    this.possedePalme = true;
+    
+
+
 }
 
 
