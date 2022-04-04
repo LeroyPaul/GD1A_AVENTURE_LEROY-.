@@ -17,11 +17,54 @@
     <script type="text/javascript">
 
 
+
+
+
+
+
+
+
+
+class sceneVariables extends Phaser.Scene{
+constructor(){
+super("scene variables");
+}
+preload(){
+//ici le code de la fonction preload
+}
+create(){
+this.vie = 1;
+this.attaque = false;
+this.compteurAttaqueTemps = 40;
+this.invincible = false;
+this.compteurInvincible = 80;
+this.direction = "bas";
+this.possedeEpee = false;
+this.nombreArgent = 0
+this.possedePalme = false
+}
+update(){
+    this.scene.start('scene 1', { vie : 3 })
+}
+};
+
+
+
+
+
+
+
+
+
+
+
+
 class scene1 extends Phaser.Scene{
     constructor(){
         super("scene 1");
     }
 
+    init(data){ this.vie = data.vie; }
 preload(){
 
     this.load.image("phaser_background", "assets/essai decor.png");
@@ -37,6 +80,10 @@ preload(){
     this.load.spritesheet('attaqueDroite','assets/anim canard attaque droite.png',{ frameWidth: 36, frameHeight: 38 });
 
     this.load.spritesheet('monstreArriere','assets/anim monstre marche avant.png',{ frameWidth: 32, frameHeight: 37 });
+
+    this.load.spritesheet('bougePasGobelin','assets/anim gobelin bouge pas.png',{ frameWidth: 32, frameHeight: 32 });
+    this.load.spritesheet('attaqueGobelin','assets/anim gobelin attaque.png',{ frameWidth: 32, frameHeight: 32 });
+
     this.load.image("epee", "assets/epee.png");
     this.load.image("palme", "assets/palme.png");
     this.load.image("vie3", "assets/vie3.png");
@@ -51,7 +98,7 @@ create(){
 
 //Variable
 
-this.vie = 3;
+
 this.attaque = false;
 this.compteurAttaqueTemps = 40;
 this.invincible = false;
@@ -77,8 +124,12 @@ this.possedePalme = false
     const layer1 = carteDuNiveau.createStaticLayer(
                     "mur",
                     tileset,
-                    );  
-                    this.player = this.physics.add.sprite(100,100,"bougePasAvant");
+                    );
+                    
+                    
+                this.player = this.physics.add.sprite(100,100,"bougePasAvant");
+
+
     const layer2 = carteDuNiveau.createStaticLayer(
                     "sol",
                     tileset,
@@ -114,8 +165,8 @@ this.texte.setScrollFactor(0)
     
     
     
-    
-    
+    this.gobelin = this.physics.add.sprite(50,200,"bougePasGobelin",true);
+    this.gobelin.anims.play('animBougePasGobelin',true)
     
     this.player.setSize(15, 13);
     this.player.setOffset(9, 20);
@@ -179,6 +230,13 @@ this.texte.setScrollFactor(0)
                 frameRate: 8,
                 repeat: -1
             });
+
+    this.anims.create({
+                key: 'animBougePasGobelin',
+                frames: this.anims.generateFrameNumbers('bougePasGobelin', {start:0,end:1}),
+                frameRate: 8,
+                repeat: -1
+            });
             
 
 
@@ -204,7 +262,7 @@ this.texte.setScrollFactor(0)
 }
 
 update(){
-    
+
 
     //Deplacement vertical
     if (this.cursors.up.isDown || this.keys.z.isDown){
@@ -348,13 +406,13 @@ attaqueEnnemi (player,ennemi){
 perdPV (player,ennemi){
     if (this.invincible == false){
         this.vie --}
-    this.invincible = true
+    this.invincible = true;
     this.compteurInvincible -=1 ;
             if(this.compteurInvincible == 0){
+                player.setTint(0xffffff);
                 this.compteurInvincible = 80;
                 this.invincible = false ;
             }
-    
     }
 
     
@@ -414,7 +472,7 @@ var config = {
         }},
         pixelArt: true,
         roundPixel: true,
-        scene: [scene1]
+        scene: [sceneVariables,scene1]
         };
         new Phaser.Game(config);
 
