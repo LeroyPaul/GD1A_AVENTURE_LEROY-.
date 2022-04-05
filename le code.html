@@ -65,6 +65,7 @@ class scene1 extends Phaser.Scene{
     }
 
     init(data){ this.vie = data.vie; }
+
 preload(){
 
     this.load.image("phaser_background", "assets/essai decor.png");
@@ -408,8 +409,10 @@ perdPV (player,ennemi){
         this.vie --}
     this.invincible = true;
     this.compteurInvincible -=1 ;
+    player.setTint(0xffffff);
+    
             if(this.compteurInvincible == 0){
-                player.setTint(0xffffff);
+                
                 this.compteurInvincible = 80;
                 this.invincible = false ;
             }
@@ -429,6 +432,7 @@ obtenirArgent (player,argent){
 obtenirPalme (player,palme){
     this.palme.destroy();
     this.possedePalme = true;
+    this.scene.start('scene 2', { vie : 3 })
     
 
 
@@ -453,6 +457,295 @@ obtenirPalme (player,palme){
 
 
 
+class scene2 extends Phaser.Scene{
+    constructor(){
+        super("scene 2");
+    }
+
+    init(data){ this.vie = data.vie; }
+    
+preload(){
+
+    this.load.image("phaser_background", "assets/maison interieur.png");
+
+    this.load.tilemapTiledJSON("carte", "interieur.json");  
+
+    this.load.spritesheet('marcheDroite','assets/anim canard marche droite.png',{ frameWidth: 32, frameHeight: 32 });
+    this.load.spritesheet('marcheGauche','assets/anim canard marche gauche.png',{ frameWidth: 32, frameHeight: 32 });
+    this.load.spritesheet('marcheArriere','assets/anim canard marche arriere.png',{ frameWidth: 32, frameHeight: 35 });
+    this.load.spritesheet('marcheAvant','assets/anim canard marche avant.png',{ frameWidth: 32, frameHeight: 35 });
+    this.load.spritesheet('bougePasAvant','assets/anim canard bouge pas avant.png',{ frameWidth: 32, frameHeight: 32 });
+
+    this.load.spritesheet('attaqueDroite','assets/anim canard attaque droite.png',{ frameWidth: 36, frameHeight: 38 });
+
+    this.load.image("vie3", "assets/vie3.png");
+    this.load.image("vie2", "assets/vie2.png");
+    this.load.image("vie1", "assets/vie1.png");
+
+}
+
+
+create(){
+
+//Variable
+
+this.attaque = false;
+this.compteurAttaqueTemps = 40;
+this.invincible = false;
+this.compteurInvincible = 80;
+this.direction = "bas";
+this.possedeEpee = false;
+this.nombreArgent = 0
+this.possedePalme = false
+
+
+// importer Tiled
+    const carteInterieur = this.add.tilemap("interieur");
+
+
+// importer TileSet 
+    const tileset = carteDuNiveau.addTilesetImage(
+        "maison interieur",
+        "phaser_background",
+    );
+// importez les layers 1 apr 1 dans l'ordre d'apparition
+    const layer1 = carteDuNiveau.createStaticLayer(
+                    "sol",
+                    tileset,
+                    );
+                    
+                    
+                this.player = this.physics.add.sprite(100,100,"bougePasAvant");
+                this.player.setSize(15, 13);
+                this.player.setOffset(9, 20);
+
+
+
+this.physics.world.setBounds(0, 0, 3200, 3200);
+//this.cameras.main.setBounds(0, 0, 14400, 8000);
+
+this.texte = this.add.text(260,170,this.nombreArgent)
+this.texte.setScrollFactor(0)
+
+    
+    layer1.setCollisionByProperty({ estSolide: true });
+    this.physics.add.collider(this.player, layer1);
+    
+    
+
+
+
+
+    //this.porte = this.pysics.add.sprite(330,200,"epee");
+
+
+    
+    this.vieEcran = this.add.image(300,150,"vie3");
+    this.vieEcran.setInteractive();
+    this.vieEcran.setScrollFactor(0);
+    
+    this.cameras.main.zoom = 2;
+    this.cameras.main.startFollow(this.player);
+
+    
+    
+    this.anims.create({
+                key: 'animMarcheDroite',
+                frames: this.anims.generateFrameNumbers('marcheDroite', {start:0,end:5}),
+                frameRate: 8,
+                repeat: -1
+            });
+
+    this.anims.create({
+                key: 'animMarcheGauche',
+                frames: this.anims.generateFrameNumbers('marcheGauche', {start:0,end:5}),
+                frameRate: 8,
+                repeat: -1
+            });
+
+    this.anims.create({
+                key: 'animMarcheArriere',
+                frames: this.anims.generateFrameNumbers('marcheArriere', {start:0,end:5}),
+                frameRate: 8,
+                repeat: -1
+            });
+
+    this.anims.create({
+                key: 'animMarcheAvant',
+                frames: this.anims.generateFrameNumbers('marcheAvant', {start:0,end:5}),
+                frameRate: 8,
+                repeat: -1
+            });
+
+    this.anims.create({
+                key: 'animBougePasAvant',
+                frames: this.anims.generateFrameNumbers('bougePasAvant', {start:0,end:7}),
+                frameRate: 8,
+                repeat: -1
+            });
+
+    this.anims.create({
+                key: 'animAttaqueDroite',
+                frames: this.anims.generateFrameNumbers('attaqueDroite', {start:0,end:5}),
+                frameRate: 8,
+                repeat: -1
+            });
+
+
+            
+
+
+            this.cursors = this.input.keyboard.createCursorKeys();
+            this.keys = this.input.keyboard.addKeys({
+                q:  Phaser.Input.Keyboard.KeyCodes.Q,
+                d:  Phaser.Input.Keyboard.KeyCodes.D,
+                z:  Phaser.Input.Keyboard.KeyCodes.Z,
+                s:  Phaser.Input.Keyboard.KeyCodes.S,
+                m:  Phaser.Input.Keyboard.KeyCodes.M,
+            });
+
+
+
+}
+
+update(){
+
+
+    //Deplacement vertical
+    if (this.cursors.up.isDown || this.keys.z.isDown){
+        this.direction = "haut"
+            if (this.cursors.down.isDown || this.keys.s.isDown) {
+                this.player.setVelocityY(0);
+                this.direction = "haut"
+            }
+            else {
+                if (this.player.body.velocity.x != 0) {
+                    this.player.setVelocityY(-150);
+                } else {
+                    this.player.setVelocityY(-200);
+                }
+            }
+        }
+        else if (this.cursors.down.isDown || this.keys.s.isDown){
+            this.direction = "bas"
+            if (this.player.body.velocity.x != 0) {
+                    this.player.setVelocityY(150);
+                } else {
+                    this.player.setVelocityY(200);
+                }
+        }
+        else {this.player.setVelocityY(0);}
+        //Deplacement horizontal
+        if (this.cursors.left.isDown || this.keys.q.isDown){
+            this.direction = "gauche"
+            if (this.cursors.right.isDown || this.keys.d.isDown) {
+                this.direction = "bas"
+                this.player.setVelocityX(0);
+            }
+            else {
+                if (this.player.body.velocity.y != 0) {
+                    this.player.setVelocityX(-150);
+                } else {
+                    this.player.setVelocityX(-200);
+                }
+            }
+        }
+        else if (this.cursors.right.isDown || this.keys.d.isDown){
+            this.direction = "droite"
+            if (this.player.body.velocity.y != 0) {
+                    this.player.setVelocityX(150);
+                } else {
+                    this.player.setVelocityX(200);
+                }
+        }
+        else {
+            this.player.setVelocityX(0);
+            }
+            
+
+
+
+        // ANIMATION (pas du tout pompe sur zelda)
+
+
+
+        if (this.player.body.velocity.x > 0){
+            this.player.anims.play('animMarcheDroite', true);
+        }
+
+        if (this.player.body.velocity.y < 0){
+            this.player.anims.play('animMarcheArriere', true);
+        }
+
+        if (this.player.body.velocity.x < 0){
+            this.player.anims.play('animMarcheGauche', true);
+        }
+
+        if (this.player.body.velocity.y > 0){
+            this.player.anims.play('animMarcheAvant', true);
+        }
+        
+        if(this.player.body.velocity.x==0){
+            if (this.player.body.velocity.y==0){
+                if (this.attaque == false){
+                        this.player.anims.play('animBougePasAvant', true);
+                        }
+                    }
+                }
+
+
+        // ACTIONS PARTICULIERES
+
+       if(this.keys.m.isDown){
+           if(this.possedeEpee == true){
+           this.attaque = true
+        }
+        }
+
+       if (this.attaque == true){
+        
+            if (this.direction == "droite"){
+                this.player.anims.play('animAttaqueDroite',true);
+                this.player.setSize(25, 30);
+                this.player.setOffset(20, 0);}
+            if (this.direction == "gauche"){
+                this.player.anims.play('animMarcheGauche', true);
+                this.player.setSize(25, 30);
+                this.player.setOffset(-15, 0);}
+
+            if (this.direction == "haut"){
+                this.player.anims.play('animMarcheArriere', true);
+                this.player.setSize(25, 25);
+                this.player.setOffset(4, -15);}
+
+            if (this.direction == "bas"){
+                this.player.anims.play('animMarcheAvant', true);
+                this.player.setSize(25, 25);
+                this.player.setOffset(4, 25);}
+            
+
+                    this.compteurAttaqueTemps -=1 ;
+                    if(this.compteurAttaqueTemps == 0){
+                        this.compteurAttaqueTemps = 40;
+                        this.attaque = false ;
+                        this.player.setSize(15, 13);
+                        this.player.setOffset(9, 20);
+            }
+       }
+
+       if (this.vie == 2){
+            this.vieEcran.setTexture("vie2")}
+        if (this.vie == 1){
+            this.vieEcran.setTexture("vie1")}
+        if (this.vie == 0){
+            this.scene.restart()}
+}
+
+
+
+
+
+};
 
 
 
@@ -472,7 +765,7 @@ var config = {
         }},
         pixelArt: true,
         roundPixel: true,
-        scene: [sceneVariables,scene1]
+        scene: [sceneVariables,scene1,scene2]
         };
         new Phaser.Game(config);
 
