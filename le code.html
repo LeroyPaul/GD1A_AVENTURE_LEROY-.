@@ -44,7 +44,7 @@ this.nombreArgent = 0
 this.possedePalme = false
 }
 update(){
-    this.scene.start('scene 1', { vie : 3 })
+    this.scene.start('scene1')
 }
 };
 
@@ -58,10 +58,10 @@ update(){
 
 class scene1 extends Phaser.Scene{
     constructor(){
-        super("scene 1");
+        super("scene1");
     }
 
-    init(data){ this.vie = data.vie; }
+
 
 preload(){
 
@@ -96,7 +96,7 @@ create(){
 
 //Variable
 
-
+this.vie = 3;
 this.attaque = false;
 this.compteurAttaqueTemps = 40;
 this.invincible = false;
@@ -440,14 +440,15 @@ obtenirEpee (player,epee){
 }
 
 obtenirArgent (player,argent){
-    this.argent.destroy();
+    argent.destroy();
     this.nombreArgent += 1;
+    this.texte.setText(this.nombreArgent)
 }
 
 obtenirPalme (player,palme){
     this.palme.destroy();
     this.possedePalme = true;
-    this.scene.start('scene 2', { vie : 3 })
+
     
 
 }
@@ -473,45 +474,61 @@ obtenirPalme (player,palme){
 
 class scene2 extends Phaser.Scene{
     constructor(){
-        super("scene 2");
+        super("scene2");
     }
     preload(){
     
-    this.load.image("phaser_background", "assets/maison interieur.png");
+    this.load.image("phaser_background1", "assets/maison interieur.png");
 
-    this.load.tilemapTiledJSON("carte", "interieur.json");  
+    this.load.tilemapTiledJSON("carte2", "interieur.json");  
 
     this.load.spritesheet('marcheDroite','assets/anim canard marche droite.png',{ frameWidth: 32, frameHeight: 32 });
     this.load.spritesheet('marcheGauche','assets/anim canard marche gauche.png',{ frameWidth: 32, frameHeight: 32 });
     this.load.spritesheet('marcheArriere','assets/anim canard marche arriere.png',{ frameWidth: 32, frameHeight: 35 });
     this.load.spritesheet('marcheAvant','assets/anim canard marche avant.png',{ frameWidth: 32, frameHeight: 35 });
     this.load.spritesheet('bougePasAvant','assets/anim canard bouge pas avant.png',{ frameWidth: 32, frameHeight: 32 });
-}
-create(){
 
     
+}
+create(){
+    this.vie = 1;
+this.attaque = false;
+this.compteurAttaqueTemps = 40;
+this.invincible = false;
+this.compteurInvincible = 80;
+this.direction = "bas";
+this.possedeEpee = false;
+this.nombreArgent = 0
+this.possedePalme = false
+    
     // importer Tiled
-    const carteDuNiveau = this.add.tilemap("carte");
+    const carteDuNiveau2 = this.add.tilemap("carte2");
 
 
 // importer TileSet 
-    const tileset = carteDuNiveau.addTilesetImage(
+    const tileset2 = carteDuNiveau2.addTilesetImage(
         "maison interieur",
-        "phaser_background",
+        "phaser_background1",
     );
 // importez les layers 1 apr 1 dans l'ordre d'apparition
 
-    const layer1 = carteDuNiveau.createStaticLayer(
+    const layer1 = carteDuNiveau2.createStaticLayer(
                     "sol",
-                    tileset,
+                    tileset2,
                     );  
 
-    this.player = this.physics.add.sprite(185,205,"bougePasAvant");
 
-    const layer2 = carteDuNiveau.createStaticLayer(
+    const layer2 = carteDuNiveau2.createStaticLayer(
                     "dessus",
-                    tileset,
+                    tileset2,
                     );  
+    const layerteleportation = carteDuNiveau2.createStaticLayer(
+                    "teleportation",
+                    tileset2,
+                    );  
+
+                    this.player = this.physics.add.sprite(185,205,"bougePasAvant");
+
     
     this.player.setSize(15, 13);
     this.player.setOffset(9, 20);
@@ -522,6 +539,14 @@ create(){
     
     this.cameras.main.zoom = 2;
     this.cameras.main.startFollow(this.player);
+
+
+    function leTP2(){
+        this.scene.start('scene1')}
+
+    layerteleportation.setCollisionByProperty({ tp: true });
+    this.physics.add.collider(this.player, layerteleportation, leTP2,null,this);
+
 
 
     this.anims.create({
@@ -577,8 +602,6 @@ create(){
 
             layer1.setCollisionByProperty({ estSolide: true });
     this.physics.add.collider(this.player, layer1);
-    layer2.setCollisionByProperty({ estSolide: true });
-    this.physics.add.collider(this.player, layer2);
 
 
 }
@@ -669,12 +692,6 @@ update(){
 
 
 
-
-
-
-
-
-
 var config = {
         type: Phaser.AUTO,
         width: 960, height: 540,
@@ -685,7 +702,7 @@ var config = {
         }},
         pixelArt: true,
         roundPixel: true,
-        scene: [scene2,sceneVariables,scene1]
+        scene: [sceneVariables,scene1,scene2]
         };
         new Phaser.Game(config);
 
