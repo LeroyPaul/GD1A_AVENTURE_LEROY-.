@@ -33,7 +33,7 @@ preload(){
 //ici le code de la fonction preload
 }
 create(){
-this.vie = 1;
+this.memoirevie = 3;
 this.attaque = false;
 this.compteurAttaqueTemps = 40;
 this.invincible = false;
@@ -45,7 +45,7 @@ this.possedePalme = false
 this.porte = false
 }
 update(){
-    this.scene.start('scene1',{porte : false})}
+    this.scene.start('scene1',{porte : false,memoirevie : this.memoirevie})}
 
 };
 
@@ -62,7 +62,8 @@ class scene1 extends Phaser.Scene{
         super("scene1");
     }
 
-
+init(data){this.vie = data.memoirevie
+}
 
 preload(){
 
@@ -97,7 +98,7 @@ create(){
 
 //Variable
 
-this.vie = 3;
+
 this.attaque = false;
 this.compteurAttaqueTemps = 40;
 this.invincible = false;
@@ -146,6 +147,8 @@ this.porte = true
                     "teleportation",
                     tileset,
                     );
+
+    layerteleportation.visible = false
 //    const coffrelayer =carteDuNiveau.getObjectLayer('coffre');
 //    coffrelayer.objects.forEach(coffreObjet => {
 //       this.coffre.get(coffreObjet.x,coffreObjet.y,'argent')
@@ -172,7 +175,7 @@ this.texte.setScrollFactor(0)
 
     function leTP1(){
         
-        this.scene.start('scene2',{porte : true})}
+        this.scene.start('scene2',{porte : true, memoirevie : this.vie})}
 
     layerteleportation.setCollisionByProperty({ tp: true });
     this.physics.add.collider(this.player, layerteleportation, leTP1,null,this);
@@ -286,7 +289,6 @@ this.texte.setScrollFactor(0)
         this.physics.add.overlap( this.player, this.ennemi, this.attaqueEnnemi, null,this);
         this.physics.add.overlap( this.player, this.ennemi, this.perdPV, null,this);
         this.physics.add.overlap( this.player, this.epee, this.obtenirEpee, null,this);
-        this.physics.add.collider( this.player, this.argent, this.obtenirArgent, null,this);
         this.physics.add.overlap( this.player, this.palme, this.obtenirPalme, null,this);
 
         
@@ -431,8 +433,8 @@ attaqueEnnemi (player,ennemi){
         if (this.attaque==true){
             ennemi.destroy();
             this.argent = this.physics.add.image(player.x+(ennemi.x-player.x)*2,player.y+(ennemi.y-player.y)*2,"argent");
-            this.nombreArgent += 1;
-            this.texte.setText;
+                    this.physics.add.collider( this.player, this.argent, this.obtenirArgent, null,this);
+
         }
     }
 
@@ -513,7 +515,6 @@ class scene2 extends Phaser.Scene{
     
 }
 create(){
-this.vie;
 this.attaque = false;
 this.compteurAttaqueTemps = 40;
 this.invincible = false;
@@ -555,7 +556,7 @@ this.possedePalme = false
                     tileset2,
                     );  
 
-                   
+    layerteleportation.visible = false
 
     
     this.player.setSize(15, 13);
@@ -570,7 +571,7 @@ this.possedePalme = false
 
 
     function leTP2(){
-        this.scene.start('scene1')}
+        this.scene.start('scene1',{memoirevie : this.vie})}
 
     layerteleportation.setCollisionByProperty({ tp: true });
     this.physics.add.collider(this.player, layerteleportation, leTP2,null,this);
