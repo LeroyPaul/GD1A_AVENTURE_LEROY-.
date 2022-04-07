@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.5" tiledversion="1.7.2" orientation="orthogonal" renderorder="right-down" width="100" height="100" tilewidth="16" tileheight="16" infinite="0" nextlayerid="12" nextobjectid="13">
+<map version="1.5" tiledversion="1.7.2" orientation="orthogonal" renderorder="right-down" width="100" height="100" tilewidth="16" tileheight="16" infinite="0" nextlayerid="13" nextobjectid="16">
  <editorsettings>
   <export target="map.json" format="json"/>
  </editorsettings>
@@ -2507,6 +2507,11 @@
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 </data>
  </layer>
+ <objectgroup id="12" name="blobLayer">
+  <object id="13" gid="7531" x="221.333" y="130" width="16" height="16"/>
+  <object id="14" gid="7531" x="276" y="425.333" width="16" height="16"/>
+  <object id="15" gid="7531" x="496" y="361.333" width="16" height="16"/>
+ </objectgroup>
  <objectgroup id="6" name="coffre">
   <object id="4" type="coffre" gid="7537" x="111.333" y="97.3333" width="16" height="16"/>
   <object id="5" type="coffre" gid="7537" x="173.333" y="255.333" width="16" height="16"/>

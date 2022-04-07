@@ -40,12 +40,12 @@ this.invincible = false;
 this.compteurInvincible = 80;
 this.direction = "bas";
 this.possedeEpee = false;
-this.nombreArgent = 0
+this.memoireArgent = 0
 this.possedePalme = false
 this.porte = false
 }
 update(){
-    this.scene.start('scene1',{porte : false,memoirevie : this.memoirevie})}
+    this.scene.start('scene1',{porte : false, memoirevie : this.memoirevie, memoireArgent : this.memoireArgent, memoireEpee : this.possedeEpee})}
 
 };
 
@@ -62,7 +62,9 @@ class scene1 extends Phaser.Scene{
         super("scene1");
     }
 
-init(data){this.vie = data.memoirevie
+init(data){this.vie = data.memoirevie,
+            this.nombreArgent = data.memoireArgent,
+            this.possedeEpee = data.memoireEpee
 }
 
 preload(){
@@ -93,6 +95,7 @@ preload(){
     this.load.image("vie2", "assets/vie2.png");
     this.load.image("vie1", "assets/vie1.png");
     this.load.image("argent", "assets/argent.png");
+    this.load.image("coin", "assets/coin.png");
 
 }
 
@@ -107,8 +110,6 @@ this.compteurAttaqueTemps = 40;
 this.invincible = false;
 this.compteurInvincible = 80;
 this.direction = "bas";
-this.possedeEpee = false;
-this.nombreArgent = 0
 this.possedePalme = false
 this.porte = true
 
@@ -162,9 +163,10 @@ this.porte = true
 this.physics.world.setBounds(0, 0, 3200, 3200);
 //this.cameras.main.setBounds(0, 0, 14400, 8000);
 
+this.coinEcran = this.add.image(265,177,"coin");
+this.coinEcran.setScrollFactor(0)
 
-
-this.texte = this.add.text(260,170,this.nombreArgent)
+this.texte = this.add.text(280,170,this.nombreArgent)
 this.texte.setScrollFactor(0)
 
     
@@ -178,7 +180,7 @@ this.texte.setScrollFactor(0)
 
     function leTP1(){
         
-        this.scene.start('scene2',{porte : true, memoirevie : this.vie})}
+        this.scene.start('scene2',{porte : true, memoirevie : this.vie, memoireArgent : this.nombreArgent, memoireEpee : this.possedeEpee})}
 
     layerteleportation.setCollisionByProperty({ tp: true });
     this.physics.add.collider(this.player, layerteleportation, leTP1,null,this);
@@ -218,13 +220,28 @@ this.texte.setScrollFactor(0)
 
 
     this.blob = this.physics.add.sprite(100,200,"blob",true);
-    this.gobelin.anims.play('animBlob',true)
+    this.blob.anims.play('animBlob',true)
 
 
+
+
+    this.blobGroupe = this.physics.add.group()
+
+
+carteDuNiveau.getObjectLayer('blobLayer').objects.forEach((blobGroupe) => {
+this.blob = this.blobGroupe.create(blobGroupe.x, blobGroupe.y, 'blob');
+this.blob.anims.play('animBlob',true)
+this.blob.setSize(20, 26);
+this.blob.setOffset(5, 10);
+});
+
+
+
+this.blob.setInteractive()
 
     //this.porte = this.pysics.add.sprite(330,200,"epee");
-
-    this.epee = this.physics.add.sprite(300,300,"epee");
+    if (this.possedeEpee == false){
+    this.epee = this.physics.add.sprite(300,300,"epee");}
 
     this.palme = this.physics.add.sprite(300,0,"palme");
     
@@ -298,7 +315,7 @@ this.texte.setScrollFactor(0)
     this.anims.create({
                 key: 'animBlob',
                 frames: this.anims.generateFrameNumbers('blob', {start:0,end:3}),
-                frameRate: 8,
+                frameRate: 4,
                 repeat: -1
             });
 
@@ -322,6 +339,8 @@ this.texte.setScrollFactor(0)
 
         this.physics.add.overlap( this.player, this.ennemiGroupe, this.attaqueEnnemi, null,this);
         this.physics.add.overlap( this.player, this.ennemiGroupe, this.perdPV, null,this);
+        this.physics.add.overlap( this.player, this.blobGroupe, this.attaqueEnnemiBlob, null,this);
+        this.physics.add.overlap( this.player, this.blobGroupe, this.perdPVBlob, null,this);
         this.physics.add.overlap( this.player, this.epee, this.obtenirEpee, null,this);
         this.physics.add.overlap( this.player, this.palme, this.obtenirPalme, null,this);
 
@@ -486,6 +505,30 @@ perdPV (player,ennemi){
             }
     }
 
+
+    attaqueEnnemiBlob (player,blob){
+        if (this.attaque==true){
+            blob.destroy();
+            this.argent = this.physics.add.image(player.x+(blob.x-player.x)*2,player.y+(blob.y-player.y)*2,"argent");
+            this.argent.setSize(15, 15);
+            this.argent.setOffset(10, 10);
+                    this.physics.add.collider( this.player, this.argent, this.obtenirArgent, null,this);
+
+        }
+    }
+
+perdPVBlob (player,blob){
+    if (this.invincible == false){
+        this.vie --}
+    this.invincible = true;
+    this.compteurInvincible -=1 ;
+    player.setTint(0xffffff);
+            if(this.compteurInvincible == 0){
+                this.compteurInvincible = 80;
+                this.invincible = false ;
+            }
+    }
+
     
 obtenirEpee (player,epee){
     this.possedeEpee = true;
@@ -494,7 +537,7 @@ obtenirEpee (player,epee){
 
 obtenirArgent (player,argent){
     argent.destroy();
-    this.nombreArgent += 1;
+    this.nombreArgent += 5;
     this.texte.setText(this.nombreArgent)
 }
 
@@ -531,6 +574,8 @@ class scene2 extends Phaser.Scene{
     }
     init(data){ this.porte = data.porte;
                 this.vie = data.memoirevie;
+                this.nombreArgent = data.memoireArgent;
+                this.possedeEpee = data.memoireEpee
     }
 
 
@@ -556,8 +601,6 @@ this.compteurAttaqueTemps = 40;
 this.invincible = false;
 this.compteurInvincible = 80;
 this.direction = "bas";
-this.possedeEpee = false;
-this.nombreArgent = 0
 this.possedePalme = false
     
     // importer Tiled
@@ -607,7 +650,7 @@ this.possedePalme = false
 
 
     function leTP2(){
-        this.scene.start('scene1',{memoirevie : this.vie})}
+        this.scene.start('scene1',{memoirevie : this.vie , memoireArgent : this.nombreArgent, memoireEpee : this.possedeEpee})}
 
     layerteleportation.setCollisionByProperty({ tp: true });
     this.physics.add.collider(this.player, layerteleportation, leTP2,null,this);
