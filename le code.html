@@ -196,10 +196,27 @@ this.texte.setScrollFactor(0)
     
     this.player.setSize(15, 13);
     this.player.setOffset(9, 20);
+    
+    
+    this.ennemiGroupe = this.physics.add.group()
 
-    this.ennemi = this.physics.add.sprite(200,200,"monstreArriere",true);
+
+    carteDuNiveau.getObjectLayer('ennemiLayer').objects.forEach((ennemiGroupe) => {
+    this.ennemi = this.ennemiGroupe.create(ennemiGroupe.x, ennemiGroupe.y, 'monstreArriere');
     this.ennemi.anims.play('animArriereMonstre',true)
+    this.ennemi.setSize(20, 26);
+    this.ennemi.setOffset(5, 10);
+    });
+
+
+
     this.ennemi.setInteractive()
+
+
+
+
+
+
 
     //this.porte = this.pysics.add.sprite(330,200,"epee");
 
@@ -286,8 +303,8 @@ this.texte.setScrollFactor(0)
             });
 
 
-        this.physics.add.overlap( this.player, this.ennemi, this.attaqueEnnemi, null,this);
-        this.physics.add.overlap( this.player, this.ennemi, this.perdPV, null,this);
+        this.physics.add.overlap( this.player, this.ennemiGroupe, this.attaqueEnnemi, null,this);
+        this.physics.add.overlap( this.player, this.ennemiGroupe, this.perdPV, null,this);
         this.physics.add.overlap( this.player, this.epee, this.obtenirEpee, null,this);
         this.physics.add.overlap( this.player, this.palme, this.obtenirPalme, null,this);
 
