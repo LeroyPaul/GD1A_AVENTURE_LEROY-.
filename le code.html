@@ -450,6 +450,8 @@ attaqueEnnemi (player,ennemi){
         if (this.attaque==true){
             ennemi.destroy();
             this.argent = this.physics.add.image(player.x+(ennemi.x-player.x)*2,player.y+(ennemi.y-player.y)*2,"argent");
+            this.argent.setSize(15, 15);
+            this.argent.setOffset(10, 10);
                     this.physics.add.collider( this.player, this.argent, this.obtenirArgent, null,this);
 
         }
