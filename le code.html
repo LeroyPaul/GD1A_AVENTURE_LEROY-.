@@ -84,6 +84,9 @@ preload(){
     this.load.spritesheet('bougePasGobelin','assets/anim gobelin bouge pas.png',{ frameWidth: 32, frameHeight: 32 });
     this.load.spritesheet('attaqueGobelin','assets/anim gobelin attaque.png',{ frameWidth: 32, frameHeight: 32 });
 
+    this.load.spritesheet('blob','assets/anim blob.png',{ frameWidth: 32, frameHeight: 32 });
+    this.load.spritesheet('petitBlob','assets/anim petit blob.png',{ frameWidth: 16, frameHeight: 16 });
+
     this.load.image("epee", "assets/epee.png");
     this.load.image("palme", "assets/palme.png");
     this.load.image("vie3", "assets/vie3.png");
@@ -214,7 +217,8 @@ this.texte.setScrollFactor(0)
 
 
 
-
+    this.blob = this.physics.add.sprite(100,200,"blob",true);
+    this.gobelin.anims.play('animBlob',true)
 
 
 
@@ -291,6 +295,19 @@ this.texte.setScrollFactor(0)
                 repeat: -1
             });
             
+    this.anims.create({
+                key: 'animBlob',
+                frames: this.anims.generateFrameNumbers('blob', {start:0,end:3}),
+                frameRate: 8,
+                repeat: -1
+            });
+
+    this.anims.create({
+                key: 'animPetitBlob',
+                frames: this.anims.generateFrameNumbers('petitBlob', {start:0,end:3}),
+                frameRate: 8,
+                repeat: -1
+            });
 
 
             this.cursors = this.input.keyboard.createCursorKeys();
