@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.5" tiledversion="1.7.2" orientation="orthogonal" renderorder="right-down" width="100" height="100" tilewidth="16" tileheight="16" infinite="0" nextlayerid="13" nextobjectid="16">
+<map version="1.5" tiledversion="1.7.2" orientation="orthogonal" renderorder="right-down" width="100" height="100" tilewidth="16" tileheight="16" infinite="0" nextlayerid="16" nextobjectid="34">
  <editorsettings>
   <export target="map.json" format="json"/>
  </editorsettings>
@@ -2507,16 +2507,15 @@
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 </data>
  </layer>
+ <objectgroup id="14" name="gobelinLayer">
+  <object id="21" gid="720" x="164.667" y="81.3333" width="16" height="16"/>
+  <object id="22" gid="720" x="142.667" y="156" width="16" height="16"/>
+  <object id="23" gid="720" x="212" y="82.6667" width="16" height="16"/>
+ </objectgroup>
  <objectgroup id="12" name="blobLayer">
   <object id="13" gid="7531" x="221.333" y="130" width="16" height="16"/>
   <object id="14" gid="7531" x="276" y="425.333" width="16" height="16"/>
   <object id="15" gid="7531" x="496" y="361.333" width="16" height="16"/>
- </objectgroup>
- <objectgroup id="6" name="coffre">
-  <object id="4" type="coffre" gid="7537" x="111.333" y="97.3333" width="16" height="16"/>
-  <object id="5" type="coffre" gid="7537" x="173.333" y="255.333" width="16" height="16"/>
-  <object id="6" gid="7537" x="224.667" y="176.667" width="16" height="16"/>
-  <object id="7" type="coffre" gid="7537" x="371.333" y="347.333" width="16" height="16"/>
  </objectgroup>
  <objectgroup id="11" name="ennemiLayer">
   <object id="8" gid="6762" x="516.667" y="420" width="16" height="16"/>
@@ -2524,5 +2523,11 @@
   <object id="10" gid="6762" x="218" y="286.667" width="16" height="16"/>
   <object id="11" gid="6762" x="113.333" y="320" width="16" height="16"/>
   <object id="12" gid="6762" x="38.6667" y="84.6667" width="16" height="16"/>
+ </objectgroup>
+ <objectgroup id="15" name="tonneauLayer">
+  <object id="25" gid="7152" x="656" y="256" width="16" height="16"/>
+  <object id="26" gid="7152" x="672.667" y="240" width="16" height="16"/>
+  <object id="27" gid="7152" x="240" y="159.333" width="16" height="16"/>
+  <object id="28" gid="7152" x="223.333" y="160.667" width="16" height="16"/>
  </objectgroup>
 </map>

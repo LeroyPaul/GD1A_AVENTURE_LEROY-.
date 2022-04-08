@@ -96,6 +96,7 @@ preload(){
     this.load.image("vie1", "assets/vie1.png");
     this.load.image("argent", "assets/argent.png");
     this.load.image("coin", "assets/coin.png");
+    this.load.image("tonneau", "assets/tonneau.png");
 
 }
 
@@ -108,10 +109,10 @@ create(){
 this.attaque = false;
 this.compteurAttaqueTemps = 40;
 this.invincible = false;
-this.compteurInvincible = 80;
 this.direction = "bas";
 this.possedePalme = false
 this.porte = true
+this.compteur = 60;
 
 
 
@@ -196,8 +197,15 @@ this.texte.setScrollFactor(0)
     
     
     
-    this.gobelin = this.physics.add.sprite(50,200,"bougePasGobelin",true);
-    this.gobelin.anims.play('animBougePasGobelin',true)
+        this.gobelinGroupe = this.physics.add.group()
+
+
+carteDuNiveau.getObjectLayer('gobelinLayer').objects.forEach((gobelinGroupe) => {
+this.gobelin = this.gobelinGroupe.create(gobelinGroupe.x, gobelinGroupe.y, 'bougePasGobelin');
+this.gobelin.anims.play('animBougePasGobelin',true)
+this.gobelin.setSize(20, 26);
+this.gobelin.setOffset(5, 10);
+});
     
     this.player.setSize(15, 13);
     this.player.setOffset(9, 20);
@@ -219,11 +227,6 @@ this.texte.setScrollFactor(0)
 
 
 
-    this.blob = this.physics.add.sprite(100,200,"blob",true);
-    this.blob.anims.play('animBlob',true)
-
-
-
 
     this.blobGroupe = this.physics.add.group()
 
@@ -238,6 +241,21 @@ this.blob.setOffset(5, 10);
 
 
 this.blob.setInteractive()
+
+
+
+
+
+this.tonneauGroupe = this.physics.add.group()
+
+
+carteDuNiveau.getObjectLayer('tonneauLayer').objects.forEach((tonneauGroupe) => {
+this.tonneau = this.tonneauGroupe.create(tonneauGroupe.x, tonneauGroupe.y, 'tonneau');
+this.tonneau.setSize(10, 10);
+this.tonneau.setOffset(3, 10);
+});
+
+
 
     //this.porte = this.pysics.add.sprite(330,200,"epee");
     if (this.possedeEpee == false){
@@ -326,6 +344,13 @@ this.blob.setInteractive()
                 repeat: -1
             });
 
+    this.anims.create({
+                key: 'animAttaqueGobelin',
+                frames: this.anims.generateFrameNumbers('attaqueGobelin', {start:0,end:3}),
+                frameRate: 12,
+                repeat: -1
+            });
+
 
             this.cursors = this.input.keyboard.createCursorKeys();
             this.keys = this.input.keyboard.addKeys({
@@ -339,18 +364,41 @@ this.blob.setInteractive()
 
         this.physics.add.overlap( this.player, this.ennemiGroupe, this.attaqueEnnemi, null,this);
         this.physics.add.overlap( this.player, this.ennemiGroupe, this.perdPV, null,this);
-        this.physics.add.overlap( this.player, this.blobGroupe, this.attaqueEnnemiBlob, null,this);
-        this.physics.add.overlap( this.player, this.blobGroupe, this.perdPVBlob, null,this);
+        this.physics.add.overlap( this.player, this.tonneauGroupe, this.attaqueEnnemi, null,this);
+        this.physics.add.overlap( this.player, this.gobelinGroupe, this.attaqueEnnemi, null,this);
+        this.physics.add.overlap( this.player, this.gobelinGroupe, this.perdPV, null,this);
+        this.physics.add.overlap( this.player, this.blobGroupe, this.attaqueEnnemi, null,this);
+        this.physics.add.overlap( this.player, this.blobGroupe, this.perdPV, null,this);
         this.physics.add.overlap( this.player, this.epee, this.obtenirEpee, null,this);
         this.physics.add.overlap( this.player, this.palme, this.obtenirPalme, null,this);
 
         
 
+        layer1.setCollisionByProperty({ estSolide: true });
+        this.physics.add.collider(this.ennemiGroupe, layer1);
+        layer2.setCollisionByProperty({ estSolide: true });
+        this.physics.add.collider(this.ennemiGroupe, layer2);
+        layer3.setCollisionByProperty({ estSolide: true });
+        this.physics.add.collider(this.ennemiGroupe, layer3);
 
+        layer1.setCollisionByProperty({ estSolide: true });
+        this.physics.add.collider(this.gobelinGroupe, layer1);
+        layer2.setCollisionByProperty({ estSolide: true });
+        this.physics.add.collider(this.gobelinGroupe, layer2);
+        layer3.setCollisionByProperty({ estSolide: true });
+        this.physics.add.collider(this.gobelinGroupe, layer3);
 }
 
 update(){
 
+    if(this.invincible == true){
+                    this.compteur-- ;
+                if(this.compteur == 0){
+                    this.compteur = 60;
+                    this.player.setTint(0xffffff);                   //invincibilité avec compteur 
+                    this.invincible = false ;
+                    }
+                }
 
     //Deplacement vertical
     if (this.cursors.up.isDown || this.keys.z.isDown){
@@ -403,7 +451,45 @@ update(){
             this.player.setVelocityX(0);
             }
             
+            this.blobGroupe.children.each(function(enemy) {
+            if (Phaser.Math.Distance.BetweenPoints(this.player, enemy) < 150) {
+                this.enemy
+            if (this.player.x < enemy.x) {
+            enemy.setVelocityX(-30);
+            }
+            else {
+                enemy.setVelocityX(30);
+            }
+            if (this.player.y < enemy.y) {
+            enemy.setVelocityY(-30);
+            }
+            else {
+                enemy.setVelocityY(30);
+            }
+        } else {enemy.setVelocityY(0); enemy.setVelocityX(0);}
+        }, this);
 
+
+
+        this.gobelinGroupe.children.each(function(enemy) {
+            if (Phaser.Math.Distance.BetweenPoints(this.player, enemy) < 200) {
+                enemy.anims.play('animAttaqueGobelin', true);
+            if (this.player.x < enemy.x) {
+            enemy.setVelocityX(-60);
+            }
+            else {
+                enemy.setVelocityX(60);
+            }
+            if (this.player.y < enemy.y) {
+            enemy.setVelocityY(-60);
+            }
+            else {
+                enemy.setVelocityY(60);
+            }
+        } else {enemy.setVelocityY(0); enemy.setVelocityX(0);
+            enemy.anims.play('animBougePasGobelin', true)}
+
+        }, this);
 
 
         // ANIMATION (pas du tout pompe sur zelda)
@@ -494,40 +580,15 @@ attaqueEnnemi (player,ennemi){
     }
 
 perdPV (player,ennemi){
-    if (this.invincible == false){
-        this.vie --}
-    this.invincible = true;
-    this.compteurInvincible -=1 ;
-    player.setTint(0xffffff);
-            if(this.compteurInvincible == 0){
-                this.compteurInvincible = 80;
-                this.invincible = false ;
-            }
-    }
-
-
-    attaqueEnnemiBlob (player,blob){
-        if (this.attaque==true){
-            blob.destroy();
-            this.argent = this.physics.add.image(player.x+(blob.x-player.x)*2,player.y+(blob.y-player.y)*2,"argent");
-            this.argent.setSize(15, 15);
-            this.argent.setOffset(10, 10);
-                    this.physics.add.collider( this.player, this.argent, this.obtenirArgent, null,this);
-
+        if(this.invincible === false){
+                this.invincible = true;
+                this.vie --;
+                this.player.setTint(0xff0000);
+                this.cameras.main.shake(100, 0.01);
         }
     }
 
-perdPVBlob (player,blob){
-    if (this.invincible == false){
-        this.vie --}
-    this.invincible = true;
-    this.compteurInvincible -=1 ;
-    player.setTint(0xffffff);
-            if(this.compteurInvincible == 0){
-                this.compteurInvincible = 80;
-                this.invincible = false ;
-            }
-    }
+
 
     
 obtenirEpee (player,epee){
