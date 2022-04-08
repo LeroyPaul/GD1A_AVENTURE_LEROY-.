@@ -69,9 +69,9 @@ init(data){this.vie = data.memoirevie,
 
 preload(){
 
-    this.load.image("phaser_background", "assets/essai decor.png");
+    this.load.image("phaser_background", "assets/tileset prairie.png");
 
-    this.load.tilemapTiledJSON("carte", "map.json");  
+    this.load.tilemapTiledJSON("carte", "map finale.json");  
 
     this.load.spritesheet('marcheDroite','assets/anim canard marche droite.png',{ frameWidth: 32, frameHeight: 32 });
     this.load.spritesheet('marcheGauche','assets/anim canard marche gauche.png',{ frameWidth: 32, frameHeight: 32 });
@@ -122,7 +122,7 @@ this.compteur = 60;
 
 // importer TileSet 
     const tileset = carteDuNiveau.addTilesetImage(
-        "test",
+        "tileset prairie",
         "phaser_background",
     );
 // importez les layers 1 apr 1 dans l'ordre d'apparition
@@ -140,7 +140,7 @@ this.compteur = 60;
                     tileset,
                     );  
 
-                this.player = this.physics.add.sprite(100,100,"bougePasAvant");
+                this.player = this.physics.add.sprite(4208,4064,"bougePasAvant");
 
 
     const layer2 = carteDuNiveau.createStaticLayer(
@@ -161,7 +161,7 @@ this.compteur = 60;
 
 
 
-this.physics.world.setBounds(0, 0, 3200, 3200);
+this.physics.world.setBounds(0, 0, 8000, 8000);
 //this.cameras.main.setBounds(0, 0, 14400, 8000);
 
 this.coinEcran = this.add.image(265,177,"coin");
