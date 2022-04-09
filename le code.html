@@ -97,7 +97,10 @@ preload(){
     this.load.image("argent", "assets/argent.png");
     this.load.image("coin", "assets/coin.png");
     this.load.image("tonneau", "assets/tonneau.png");
-
+    this.load.image("feuille", "assets/feuille.png");
+    this.load.image("eau", "assets/eau.png");
+    this.load.image("marchand", "assets/marchand.png");
+    this.load.image("marchandVendu", "assets/marchand vendu.png");
 }
 
 
@@ -140,7 +143,56 @@ this.compteur = 60;
                     tileset,
                     );  
 
-                this.player = this.physics.add.sprite(4208,4064,"bougePasAvant");
+this.marchand = this.physics.add.sprite(4200,4200,"marchand");
+this.marchand.setSize(0, 0);
+this.marchand.setOffset(0, 0);
+this.marchand.setPushable(false)
+
+
+this.player = this.physics.add.sprite(4208,4064,"bougePasAvant");
+
+
+this.blobGroupe = this.physics.add.group()
+
+carteDuNiveau.getObjectLayer('blobLayer').objects.forEach((blobGroupe) => {
+this.blob = this.blobGroupe.create(blobGroupe.x, blobGroupe.y, 'blob');
+this.blob.anims.play('animBlob',true)
+this.blob.setSize(20, 26);
+this.blob.setOffset(5, 10);
+});
+
+this.gobelinGroupe = this.physics.add.group()
+
+carteDuNiveau.getObjectLayer('gobelinLayer').objects.forEach((gobelinGroupe) => {
+this.gobelin = this.gobelinGroupe.create(gobelinGroupe.x, gobelinGroupe.y, 'bougePasGobelin');
+this.gobelin.anims.play('animBougePasGobelin',true)
+this.gobelin.setSize(20, 26);
+this.gobelin.setOffset(5, 10);
+});
+
+this.ennemiGroupe = this.physics.add.group()
+
+carteDuNiveau.getObjectLayer('ennemiLayer').objects.forEach((ennemiGroupe) => {
+this.ennemi = this.ennemiGroupe.create(ennemiGroupe.x, ennemiGroupe.y, 'monstreArriere');
+this.ennemi.anims.play('animArriereMonstre',true)
+this.ennemi.setSize(20, 26);
+this.ennemi.setOffset(5, 10);
+});
+
+this.feuilleGroupe = this.physics.add.staticGroup()
+
+carteDuNiveau.getObjectLayer('feuilleLayer').objects.forEach((feuilleGroupe) => {
+this.feuille = this.feuilleGroupe.create(feuilleGroupe.x, feuilleGroupe.y, 'feuille');
+});
+
+this.eauGroupe = this.physics.add.staticGroup()
+
+carteDuNiveau.getObjectLayer('eauLayer').objects.forEach((eauGroupe) => {
+this.eau = this.eauGroupe.create(eauGroupe.x, eauGroupe.y, 'eau');
+
+this.eau.setSize(0, 0);
+this.eau.setOffset(0, 0);
+});
 
 
     const layer2 = carteDuNiveau.createStaticLayer(
@@ -170,14 +222,6 @@ this.coinEcran.setScrollFactor(0)
 this.texte = this.add.text(280,170,this.nombreArgent)
 this.texte.setScrollFactor(0)
 
-    
-    layer1.setCollisionByProperty({ estSolide: true });
-    this.physics.add.collider(this.player, layer1);
-    layer2.setCollisionByProperty({ estSolide: true });
-    this.physics.add.collider(this.player, layer2);
-    layer3.setCollisionByProperty({ estSolide: true });
-    this.physics.add.collider(this.player, layer3);
-
 
     function leTP1(){
         
@@ -186,68 +230,23 @@ this.texte.setScrollFactor(0)
     layerteleportation.setCollisionByProperty({ tp: true });
     this.physics.add.collider(this.player, layerteleportation, leTP1,null,this);
 
-
-
-
         layer1.setCollisionByProperty({ eau: true });
         this.physics.add.collider(this.player, layer1);
         layer2.setCollisionByProperty({ eau: true });
         this.physics.add.collider(this.player, layer2);
-    
-    
-    
-    
-        this.gobelinGroupe = this.physics.add.group()
 
 
-carteDuNiveau.getObjectLayer('gobelinLayer').objects.forEach((gobelinGroupe) => {
-this.gobelin = this.gobelinGroupe.create(gobelinGroupe.x, gobelinGroupe.y, 'bougePasGobelin');
-this.gobelin.anims.play('animBougePasGobelin',true)
-this.gobelin.setSize(20, 26);
-this.gobelin.setOffset(5, 10);
-});
-    
     this.player.setSize(15, 13);
     this.player.setOffset(9, 20);
     
-    
-    this.ennemiGroupe = this.physics.add.group()
-
-
-    carteDuNiveau.getObjectLayer('ennemiLayer').objects.forEach((ennemiGroupe) => {
-    this.ennemi = this.ennemiGroupe.create(ennemiGroupe.x, ennemiGroupe.y, 'monstreArriere');
-    this.ennemi.anims.play('animArriereMonstre',true)
-    this.ennemi.setSize(20, 26);
-    this.ennemi.setOffset(5, 10);
-    });
-
-
 
     this.ennemi.setInteractive()
 
-
-
-
-    this.blobGroupe = this.physics.add.group()
-
-
-carteDuNiveau.getObjectLayer('blobLayer').objects.forEach((blobGroupe) => {
-this.blob = this.blobGroupe.create(blobGroupe.x, blobGroupe.y, 'blob');
-this.blob.anims.play('animBlob',true)
-this.blob.setSize(20, 26);
-this.blob.setOffset(5, 10);
-});
-
-
-
 this.blob.setInteractive()
 
+this.marchand.setInteractive();
 
-
-
-
-this.tonneauGroupe = this.physics.add.group()
-
+this.tonneauGroupe = this.physics.add.staticGroup()
 
 carteDuNiveau.getObjectLayer('tonneauLayer').objects.forEach((tonneauGroupe) => {
 this.tonneau = this.tonneauGroupe.create(tonneauGroupe.x, tonneauGroupe.y, 'tonneau');
@@ -255,13 +254,19 @@ this.tonneau.setSize(10, 10);
 this.tonneau.setOffset(3, 10);
 });
 
+this.physics.add.collider(this.player, this.tonneauGroupe);
 
 
-    //this.porte = this.pysics.add.sprite(330,200,"epee");
+this.physics.add.collider(this.player, this.feuilleGroupe);
+this.physics.add.collider(this.player, this.eauGroupe);
+
+
+
+
     if (this.possedeEpee == false){
-    this.epee = this.physics.add.sprite(300,300,"epee");}
-
-    this.palme = this.physics.add.sprite(300,0,"palme");
+    this.epee = this.physics.add.sprite(4000,4000,"epee");}
+    if (this.possedePalme == false){
+    this.palme = this.physics.add.sprite(4100,4000,"palme");}
     
     this.vieEcran = this.add.image(300,150,"vie3");
     this.vieEcran.setInteractive();
@@ -371,8 +376,15 @@ this.tonneau.setOffset(3, 10);
         this.physics.add.overlap( this.player, this.blobGroupe, this.perdPV, null,this);
         this.physics.add.overlap( this.player, this.epee, this.obtenirEpee, null,this);
         this.physics.add.overlap( this.player, this.palme, this.obtenirPalme, null,this);
+        this.physics.add.collider( this.player, this.feuilleGroupe, this.attaqueFeuille, null,this);
+        this.physics.add.overlap( this.player, this.marchand, this.obtenirPalme, null,this);
 
-        
+        layer1.setCollisionByProperty({ estSolide: true });
+        this.physics.add.collider(this.player, layer1);
+        layer2.setCollisionByProperty({ estSolide: true });
+        this.physics.add.collider(this.player, layer2);
+        layer3.setCollisionByProperty({ estSolide: true });
+        this.physics.add.collider(this.player, layer3);
 
         layer1.setCollisionByProperty({ estSolide: true });
         this.physics.add.collider(this.ennemiGroupe, layer1);
@@ -387,6 +399,17 @@ this.tonneau.setOffset(3, 10);
         this.physics.add.collider(this.gobelinGroupe, layer2);
         layer3.setCollisionByProperty({ estSolide: true });
         this.physics.add.collider(this.gobelinGroupe, layer3);
+
+        layer1.setCollisionByProperty({ estSolide: true });
+        this.physics.add.collider(this.blobGroupe, layer1);
+        layer2.setCollisionByProperty({ estSolide: true });
+        this.physics.add.collider(this.blobGroupe, layer2);
+        layer3.setCollisionByProperty({ estSolide: true });
+        this.physics.add.collider(this.blobGroupe, layer3);
+        
+
+
+
 }
 
 update(){
@@ -603,13 +626,18 @@ obtenirArgent (player,argent){
 }
 
 obtenirPalme (player,palme){
-    this.palme.destroy();
-    this.possedePalme = true;
-
+if (this.nombreArgent > 200)
+    this.marchand.setTexture("marchandVendu")
+     this.eauGroupe.children.each(function(eau) {
+            eau.destroy();
+        }, this);
     
-
 }
 
+attaqueFeuille (player,feuilleGroupe){
+    if(this.attaque == true){
+    feuilleGroupe.destroy();}
+}
 
 };
 
@@ -875,7 +903,7 @@ var config = {
         physics: {
         default: 'arcade',
         arcade: {
-        debug: true
+        debug: true,
         }},
         pixelArt: true,
         roundPixel: true,
