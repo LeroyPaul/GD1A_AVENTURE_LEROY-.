@@ -40,7 +40,7 @@ this.invincible = false;
 this.compteurInvincible = 80;
 this.direction = "bas";
 this.possedeEpee = false;
-this.memoireArgent = 0
+this.memoireArgent = 200
 this.possedePalme = false
 this.porte = false
 }
@@ -101,6 +101,9 @@ preload(){
     this.load.image("eau", "assets/eau.png");
     this.load.image("marchand", "assets/marchand.png");
     this.load.image("marchandVendu", "assets/marchand vendu.png");
+    this.load.image("cle", "assets/cle.png");
+    this.load.image("cage", "assets/cage.png");
+    this.load.image("cageOuverte", "assets/cageOuverte.png");
 }
 
 
@@ -143,13 +146,19 @@ this.compteur = 60;
                     tileset,
                     );  
 
-this.marchand = this.physics.add.sprite(4200,4200,"marchand");
+this.marchand = this.physics.add.sprite(4032,6384,"marchand");
 this.marchand.setSize(0, 0);
 this.marchand.setOffset(0, 0);
 this.marchand.setPushable(false)
 
+this.cage = this.physics.add.sprite(4008,4184,"cage");
+this.cage.setSize(50, 0);
+this.cage.setOffset(40, 0);
+this.cage.setPushable(false)
 
-this.player = this.physics.add.sprite(4208,4064,"bougePasAvant");
+this.cle = this.physics.add.sprite(4008,4064,"cle");
+
+
 
 
 this.blobGroupe = this.physics.add.group()
@@ -184,6 +193,8 @@ this.feuilleGroupe = this.physics.add.staticGroup()
 carteDuNiveau.getObjectLayer('feuilleLayer').objects.forEach((feuilleGroupe) => {
 this.feuille = this.feuilleGroupe.create(feuilleGroupe.x, feuilleGroupe.y, 'feuille');
 });
+
+this.player = this.physics.add.sprite(4208,4064,"bougePasAvant");
 
 this.eauGroupe = this.physics.add.staticGroup()
 
@@ -245,7 +256,7 @@ this.texte.setScrollFactor(0)
 this.blob.setInteractive()
 
 this.marchand.setInteractive();
-
+this.cage.setInteractive();
 this.tonneauGroupe = this.physics.add.staticGroup()
 
 carteDuNiveau.getObjectLayer('tonneauLayer').objects.forEach((tonneauGroupe) => {
@@ -256,7 +267,7 @@ this.tonneau.setOffset(3, 10);
 
 this.physics.add.collider(this.player, this.tonneauGroupe);
 
-
+this.physics.add.collider(this.player, this.cage);
 this.physics.add.collider(this.player, this.feuilleGroupe);
 this.physics.add.collider(this.player, this.eauGroupe);
 
@@ -265,8 +276,6 @@ this.physics.add.collider(this.player, this.eauGroupe);
 
     if (this.possedeEpee == false){
     this.epee = this.physics.add.sprite(4000,4000,"epee");}
-    if (this.possedePalme == false){
-    this.palme = this.physics.add.sprite(4100,4000,"palme");}
     
     this.vieEcran = this.add.image(300,150,"vie3");
     this.vieEcran.setInteractive();
@@ -378,6 +387,8 @@ this.physics.add.collider(this.player, this.eauGroupe);
         this.physics.add.overlap( this.player, this.palme, this.obtenirPalme, null,this);
         this.physics.add.collider( this.player, this.feuilleGroupe, this.attaqueFeuille, null,this);
         this.physics.add.overlap( this.player, this.marchand, this.obtenirPalme, null,this);
+        this.physics.add.overlap( this.player, this.cage, this.ouvrirCage, null,this);
+        this.physics.add.overlap( this.player, this.cle, this.obtenirCle, null,this);
 
         layer1.setCollisionByProperty({ estSolide: true });
         this.physics.add.collider(this.player, layer1);
@@ -626,18 +637,34 @@ obtenirArgent (player,argent){
 }
 
 obtenirPalme (player,palme){
-if (this.nombreArgent > 200)
+if (this.nombreArgent >= 200){
     this.marchand.setTexture("marchandVendu")
+    this.nombreArgent -= 200;
+    this.texte.setText(this.nombreArgent)
      this.eauGroupe.children.each(function(eau) {
             eau.destroy();
         }, this);
-    
+}
+}
+
+obtenirCle(player,cle){
+    this.possedeCle = true;
+    cle.destroy();
 }
 
 attaqueFeuille (player,feuilleGroupe){
     if(this.attaque == true){
     feuilleGroupe.destroy();}
 }
+
+ouvrirCage (player,cage){
+    if (this.possedeCle == true){
+        this.cage.setTexture("cageOuverte")
+    }
+}
+
+
+
 
 };
 
