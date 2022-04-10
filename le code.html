@@ -30,7 +30,8 @@ constructor(){
 super("scene variables");
 }
 preload(){
-//ici le code de la fonction preload
+    this.load.image("ecranTitre", "assets/ecran titre.png");
+
 }
 create(){
 this.memoirevie = 3;
@@ -43,9 +44,19 @@ this.direction = "bas";
 this.memoireArgent = 0
 this.possedePalme = false
 this.porte = false
+
+this.add.image(this.cameras.main.width/2,this.cameras.main.height/2,"ecranTitre").setScale(1);
+
+this.cursors = this.input.keyboard.createCursorKeys();
+            this.keys = this.input.keyboard.addKeys({
+                m:  Phaser.Input.Keyboard.KeyCodes.M,});
 }
+
+
 update(){
+    if(this.keys.m.isDown){
     this.scene.start('scene2',{porte : false, memoirevie : this.memoirevie, memoireArgent : this.memoireArgent})}
+}
 
 };
 
