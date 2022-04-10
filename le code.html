@@ -39,13 +39,13 @@ this.compteurAttaqueTemps = 40;
 this.invincible = false;
 this.compteurInvincible = 80;
 this.direction = "bas";
-this.possedeEpee = false;
-this.memoireArgent = 200
+
+this.memoireArgent = 0
 this.possedePalme = false
 this.porte = false
 }
 update(){
-    this.scene.start('scene1',{porte : false, memoirevie : this.memoirevie, memoireArgent : this.memoireArgent, memoireEpee : this.possedeEpee})}
+    this.scene.start('scene2',{porte : false, memoirevie : this.memoirevie, memoireArgent : this.memoireArgent})}
 
 };
 
@@ -63,8 +63,8 @@ class scene1 extends Phaser.Scene{
     }
 
 init(data){this.vie = data.memoirevie,
-            this.nombreArgent = data.memoireArgent,
-            this.possedeEpee = data.memoireEpee
+            this.nombreArgent = data.memoireArgent
+
 }
 
 preload(){
@@ -80,6 +80,9 @@ preload(){
     this.load.spritesheet('bougePasAvant','assets/anim canard bouge pas avant.png',{ frameWidth: 32, frameHeight: 32 });
 
     this.load.spritesheet('attaqueDroite','assets/anim canard attaque droite.png',{ frameWidth: 36, frameHeight: 38 });
+    this.load.spritesheet('attaqueGauche','assets/anim canard attaque gauche.png',{ frameWidth: 36, frameHeight: 36 });
+    this.load.spritesheet('attaqueAvant','assets/anim canard attaque avant.png',{ frameWidth: 36, frameHeight: 44 });
+    this.load.spritesheet('attaqueArriere','assets/anim canard attaque arriere.png',{ frameWidth: 36, frameHeight: 44 });
 
     this.load.spritesheet('monstreArriere','assets/anim monstre marche avant.png',{ frameWidth: 32, frameHeight: 37 });
 
@@ -111,7 +114,7 @@ create(){
 
 //Variable
 
-
+this.possedeEpee = false
 this.attaque = false;
 this.compteurAttaqueTemps = 40;
 this.invincible = false;
@@ -151,15 +154,22 @@ this.marchand.setSize(0, 0);
 this.marchand.setOffset(0, 0);
 this.marchand.setPushable(false)
 
-this.cage = this.physics.add.sprite(4008,4184,"cage");
+this.cage = this.physics.add.sprite(4256,2288,"cage");
 this.cage.setSize(50, 0);
 this.cage.setOffset(40, 0);
 this.cage.setPushable(false)
 
-this.cle = this.physics.add.sprite(4008,4064,"cle");
+this.cle = this.physics.add.sprite(240,5936,"cle");
 
 
 
+this.tonneauGroupe = this.physics.add.staticGroup()
+
+carteDuNiveau.getObjectLayer('tonneauLayer').objects.forEach((tonneauGroupe) => {
+this.tonneau = this.tonneauGroupe.create(tonneauGroupe.x, tonneauGroupe.y, 'tonneau');
+this.tonneau.setSize(10, 10);
+this.tonneau.setOffset(3, 10);
+});
 
 this.blobGroupe = this.physics.add.group()
 
@@ -236,7 +246,7 @@ this.texte.setScrollFactor(0)
 
     function leTP1(){
         
-        this.scene.start('scene2',{porte : true, memoirevie : this.vie, memoireArgent : this.nombreArgent, memoireEpee : this.possedeEpee})}
+        this.scene.start('scene2',{porte : true, memoirevie : this.vie, memoireArgent : this.nombreArgent})}
 
     layerteleportation.setCollisionByProperty({ tp: true });
     this.physics.add.collider(this.player, layerteleportation, leTP1,null,this);
@@ -257,13 +267,7 @@ this.blob.setInteractive()
 
 this.marchand.setInteractive();
 this.cage.setInteractive();
-this.tonneauGroupe = this.physics.add.staticGroup()
 
-carteDuNiveau.getObjectLayer('tonneauLayer').objects.forEach((tonneauGroupe) => {
-this.tonneau = this.tonneauGroupe.create(tonneauGroupe.x, tonneauGroupe.y, 'tonneau');
-this.tonneau.setSize(10, 10);
-this.tonneau.setOffset(3, 10);
-});
 
 this.physics.add.collider(this.player, this.tonneauGroupe);
 
@@ -275,7 +279,7 @@ this.physics.add.collider(this.player, this.eauGroupe);
 
 
     if (this.possedeEpee == false){
-    this.epee = this.physics.add.sprite(4000,4000,"epee");}
+    this.epee = this.physics.add.sprite(1264,3456,"epee");}
     
     this.vieEcran = this.add.image(300,150,"vie3");
     this.vieEcran.setInteractive();
@@ -326,6 +330,27 @@ this.physics.add.collider(this.player, this.eauGroupe);
     this.anims.create({
                 key: 'animAttaqueDroite',
                 frames: this.anims.generateFrameNumbers('attaqueDroite', {start:0,end:5}),
+                frameRate: 8,
+                repeat: -1
+            });
+
+    this.anims.create({
+                key: 'animAttaqueGauche',
+                frames: this.anims.generateFrameNumbers('attaqueGauche', {start:0,end:5}),
+                frameRate: 8,
+                repeat: -1
+            });
+
+    this.anims.create({
+                key: 'animAttaqueAvant',
+                frames: this.anims.generateFrameNumbers('attaqueAvant', {start:0,end:5}),
+                frameRate: 8,
+                repeat: -1
+            });
+
+    this.anims.create({
+                key: 'animAttaqueArriere',
+                frames: this.anims.generateFrameNumbers('attaqueArriere', {start:0,end:5}),
                 frameRate: 8,
                 repeat: -1
             });
@@ -570,17 +595,17 @@ update(){
                 this.player.setSize(25, 30);
                 this.player.setOffset(20, 0);}
             if (this.direction == "gauche"){
-                this.player.anims.play('animMarcheGauche', true);
+                this.player.anims.play('animAttaqueGauche', true);
                 this.player.setSize(25, 30);
                 this.player.setOffset(-15, 0);}
 
             if (this.direction == "haut"){
-                this.player.anims.play('animMarcheArriere', true);
+                this.player.anims.play('animAttaqueArriere', true);
                 this.player.setSize(25, 25);
                 this.player.setOffset(4, -15);}
 
             if (this.direction == "bas"){
-                this.player.anims.play('animMarcheAvant', true);
+                this.player.anims.play('animAttaqueAvant', true);
                 this.player.setSize(25, 25);
                 this.player.setOffset(4, 25);}
             
@@ -691,7 +716,7 @@ class scene2 extends Phaser.Scene{
     init(data){ this.porte = data.porte;
                 this.vie = data.memoirevie;
                 this.nombreArgent = data.memoireArgent;
-                this.possedeEpee = data.memoireEpee
+                
     }
 
 
@@ -766,7 +791,7 @@ this.possedePalme = false
 
 
     function leTP2(){
-        this.scene.start('scene1',{memoirevie : this.vie , memoireArgent : this.nombreArgent, memoireEpee : this.possedeEpee})}
+        this.scene.start('scene1',{memoirevie : this.vie , memoireArgent : this.nombreArgent})}
 
     layerteleportation.setCollisionByProperty({ tp: true });
     this.physics.add.collider(this.player, layerteleportation, leTP2,null,this);
@@ -810,12 +835,7 @@ this.possedePalme = false
                 repeat: -1
             });
 
-    this.anims.create({
-                key: 'animAttaqueDroite',
-                frames: this.anims.generateFrameNumbers('attaqueDroite', {start:0,end:5}),
-                frameRate: 8,
-                repeat: -1
-            });
+
 
             this.cursors = this.input.keyboard.createCursorKeys();
             this.keys = this.input.keyboard.addKeys({
